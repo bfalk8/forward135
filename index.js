@@ -1,17 +1,25 @@
+'use strict';
+//import SocketHandler from 'server/src/SocketHandler';
+
 var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var path = require('path');
-var io = require('socket.io')(http);
+// var io = require('socket.io')(http);
+var socket = require('./server/src/SocketHandler');
 
 var routes = require('./server/routes/index');
 
+
+
 app.set('views', path.join(__dirname, './server/views'));
 app.set('view engine', 'jade');
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client')));
 
-io.on('connection', function(socket){
-    console.log('a user connected');
+/** Socket IO initialization */
+var socketio = new socket(http);
+socketio.getIo().on('connection', function(socket){
+    socketio.handleSocket(socket);
 });
 
 http.listen(3000, function(){
