@@ -7,7 +7,7 @@ module.exports = (config) => {
             reporters: ['progress'],
             port: 9876,
             colors: false,
-            logLevel: config.LOG_INFO,
+            logLevel: config.LOG_DEBUG,
             autoWatch: false,
             // browsers: ['Chrome'],
             browsers: ['PhantomJS'],
