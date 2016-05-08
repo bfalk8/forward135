@@ -8,9 +8,6 @@ var path = require('path');
 // var io = require('socket.io')(http);
 var socket = require('./server/src/SocketHandler');
 
-var routes = require('./server/routes/index');
-
-
 
 app.set('views', path.join(__dirname, './server/views'));
 app.set('view engine', 'jade');
