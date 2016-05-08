@@ -1,0 +1,23 @@
+{
+  "name": "forward135",
+  "version": "1.0.0",
+  "description": "Repo for the the forward research group",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bfalk8/forward135.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bfalk8/forward135/issues"
+  },
+  "homepage": "https://github.com/bfalk8/forward135#readme",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
