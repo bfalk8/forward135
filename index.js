@@ -8,7 +8,7 @@ var routes = require('./server/routes/index');
 
 app.set('views', path.join(__dirname, './server/views'));
 app.set('view engine', 'jade');
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'client')));
 
 io.on('connection', function(socket){
     console.log('a user connected');
