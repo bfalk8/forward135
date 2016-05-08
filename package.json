@@ -5,7 +5,16 @@
   "scripts": {
     "start": "node index.js",
     "prestart": "webpack --config ./client/webpack.config.js --progress --colors",
-    "build": "webpack --config ./client/webpack.config.js --progress --colors"
+    "build": "webpack --config ./client/webpack.config.js --progress --colors",
+    "karma": "karma start",
+    "karma:server": "npm run karma -- --browsers=PhantomJS",
+    "karma:watch": "npm run karma -- --auto-watch --no-single-run",
+    "karma:all": "npm run karma -- --browsers=PhantomJS,Chrome,Firefox",
+    "packages": "npm list --depth=0",
+    "package:purge": "rm -rf node_modules",
+    "package:reinstall": "npm run package:purge && npm install",
+    "package:updates": "./node_modules/.bin/ncu '/^(?!npm-shrinkwrap|jsdom).*$/'",
+    "package:upgrade": "npm run package:updates -- -u"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
@@ -13,9 +22,11 @@
     "debug": "~2.2.0",
     "express": "~4.13.1",
     "jade": "~1.11.0",
+    "lodash": "^4.11.2",
     "morgan": "~1.6.1",
     "serve-favicon": "~2.3.0",
-    "socket.io": "^1.4.6"
+    "socket.io": "^1.4.6",
+    "socket.io-client": "^1.4.6"
   },
   "devDependencies": {
     "babel-core": "^6.8.0",
