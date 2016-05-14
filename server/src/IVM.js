@@ -1,8 +1,17 @@
 'use strict';
 
+let instance = null;
+
 class IVM {
     constructor(){
+        // check for singleton pattern
+        if(!instance) {
+            instance = this;
+        }
         this.queries = {};
+        
+        // returns singleton
+        return instance;
     }
 
     addQuery(query) {
