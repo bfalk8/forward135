@@ -16,9 +16,9 @@ class IVM {
 
     addQuery(query) {
         this.queries[query] = {
-            insertDiff: "hey you got a query",
-            updateDiff: "hey you got an update",
-            deleteDiff: "hey you got a delete" };
+            insertDiff: 'hey you got a query',
+            updateDiff: 'hey you got an update',
+            deleteDiff: 'hey you got a delete' };
     }
 
     changeInsertDiff(query, diff) {
