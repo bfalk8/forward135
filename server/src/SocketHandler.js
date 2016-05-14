@@ -5,7 +5,7 @@ var socket = require('socket.io');
 class SocketHandler {
     constructor(http){
         this.io = socket(http);
-        //this.io.on('connection', this.handleSocket(socket));
+        this.io.on('connection', (socket) => {this.handleSocket(socket)});
     }
 
     getIo() {
@@ -13,8 +13,16 @@ class SocketHandler {
     }
 
     handleSocket(socket) {
-        console.log("fuck off!");
-        console.log(socket);
+        socket.on('echo', (data)=>{this.echo(socket, data)});
+        socket.on('init query', (data) => {this.checkRoom(socket, data)});
+    }
+
+    checkRoom(socket){
+        console.log("CHECK ROOM: " + data);
+    }
+    
+    echo(socket, data) {
+        socket.emit('echo', data);
     }
 
 }
