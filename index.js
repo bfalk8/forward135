@@ -15,9 +15,9 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 /** Socket IO initialization */
 var socketio = new socket(http);
-socketio.getIo().on('connection', function(socket){
-    socketio.handleSocket(socket);
-});
+// socketio.getIo().on('connection', function(socket){
+//     socketio.handleSocket(socket);
+// });
 
 http.listen(3000, function(){
     console.log('listening on *:3000');
