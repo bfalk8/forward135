@@ -9,7 +9,6 @@ module.exports = (config) => {
             colors: true,
             logLevel: config.LOG_DEBUG,
             autoWatch: false,
-            // browsers: ['Chrome'],
             browsers: ['PhantomJS'],
             singleRun: true,
 
