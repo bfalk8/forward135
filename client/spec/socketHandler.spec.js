@@ -4,7 +4,7 @@ var chai = require('chai'),
 
 var io = require('socket.io-client');
 
-describe("Server Suite", function(){
+describe("Socket Handler Suite", function(){
     var server,
         options = {
             transports: ['websocket'],
