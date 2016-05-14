@@ -14,7 +14,8 @@ module.exports = (config) => {
             singleRun: true,
 
             files: [
-                'spec/**/*.js'
+                'spec/**/*.js',
+                'spec/global-variables.js'
             ],
 
             preprocessors: {

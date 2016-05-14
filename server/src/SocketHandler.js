@@ -6,6 +6,7 @@ class SocketHandler {
     constructor(http){
         this.io = socket(http);
         this.io.on('connection', this.handleSocket);
+
     }
 
     getIo() {
@@ -13,18 +14,16 @@ class SocketHandler {
     }
 
     handleSocket(socket) {
-        console.log("fuck off!");
-        console.log(socket);
+        socket.on('echo', (data)=>{this.echo(socket, data)});
+        socket.on('init query', (data) => {this.checkRoom(socket, data)});
+    }
 
-
-        // Used for test
-        this.io.on("echo", function(msg, callback){
-            callback = callback || function(){};
-
-            this.io.emit("echo", msg);
-
-            callback(null, "Done.");
-        });
+    checkRoom(socket){
+        console.log("CHECK ROOM: " + data);
+    }
+    
+    echo(socket, data) {
+        socket.emit('echo', data);
     }
 
 }
