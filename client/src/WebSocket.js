@@ -2,6 +2,7 @@ import io from 'socket.io-client';
 class WebSocket {
 
     constructor() {
+        localStorage.debug = '*';
         this.init();
     }
 
