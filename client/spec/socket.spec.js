@@ -1,25 +1,23 @@
 var assert = require('chai').assert;
-var io = require('socket.io-client');
+var io     = require('socket.io-client');
 
 var socketURL = 'http://0.0.0.0:3000';
 
-var options ={
+var options = {
     transports: ['websocket'],
     'force new connection': true
 };
 
-var userName = 'Me';
-
-it('Should broadcast new user to all users', function(done){
+it('Should broadcast new user to all users', function (done) {
     var client = io.connect(socketURL, options);
 
-    client.on('connect', function(data){
+    client.on('connect', function (data) {
         assert(true);
         client.disconnect();
         done();
     });
 
-    client.on('error', function(error) {
+    client.on('error', function (error) {
         assert(false, error);
         done();
     });
