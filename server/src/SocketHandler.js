@@ -1,9 +1,10 @@
 'use strict';
-//import * as socket from 'socket.io';
-var socket = require('socket.io'); // added listen
+
+var self, socket = require('socket.io'); 
 
 class SocketHandler {
     constructor(http){
+        self = this;
         this.io = socket(http);
         this.io.on('connection', this.handleSocket);
 
@@ -14,8 +15,8 @@ class SocketHandler {
     }
 
     handleSocket(socket) {
-        socket.on('echo', (data)=>{this.echo(socket, data)});
-        socket.on('init query', (data) => {this.checkRoom(socket, data)});
+        socket.on('echo', (data)=>{self.echo(socket, data)});
+        socket.on('init query', (data) => {self.checkRoom(socket, data)});
     }
 
     checkRoom(socket){
