@@ -9,10 +9,6 @@ class SocketHandler {
         this.io.on('connection', (socket) => {this.handleSocket(socket)});
     }
 
-    getIo() {
-        return this.io;
-    }
-
     handleSocket(socket) {
         console.log("connected");
         socket.on('echo', (data)=>{this.echo(socket, data)});
@@ -23,10 +19,12 @@ class SocketHandler {
         console.log("CHECK ROOM: " + data);
         var query = data.query;
         if(this.io.rooms.indexOf(query) >= 0){
-            socket.join(query);
-            socket.emit('init query', {data: 'initial query'});
+            console.log("Room: " + query + " created!");
+        } else {
+            console.log("Room: " + query + " exists!");
         }
-        
+        socket.join(query);
+        socket.emit('init query', {data: 'initial query'});
     }
     
     echo(socket, data) {
