@@ -1,10 +1,8 @@
 var chai = require('chai'),
     mocha = require('mocha'),
-    should = chai.should(),
-    assert = chai.assert(),
-    expect = chai.expect();
+    should = chai.should();
 
-var io = require('should.io-client');
+var io = require('socket.io-client');
 
 describe("Server Suite", function(){
     var server,
@@ -15,7 +13,7 @@ describe("Server Suite", function(){
 
     beforeEach(function(done){
         // start server
-        server = require('../index.js').server;
+        server = require('../../index.js').server;
 
         done();
     });
@@ -23,7 +21,7 @@ describe("Server Suite", function(){
     it("should echo a message", function(done){
         var client = io.connect("http://localhost:3000", options);
 
-        client.once("connect", function() {
+        client.once("connection", function() {
             client.once("echo", function(msg){
                 msg.should.equal("Hello World");
 
@@ -33,5 +31,22 @@ describe("Server Suite", function(){
         });
 
         client.emit("echo", "Hello World");
+        done();
+    });
+    
+    it("should return a SocketHandler", function(done){
+        var client = io.connect("http://localhost:3000", options);
+
+        client.once("connection", function() {
+            client.once("echo", function(msg){
+                msg.should.equal("Hello World");
+
+                client.disconnect();
+                done();
+            });
+        });
+
+        client.emit("echo", "Hello World");
+        done();
     });
 });
