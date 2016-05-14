@@ -10,6 +10,7 @@
     "karma:server": "npm run karma -- --browsers=PhantomJS",
     "karma:watch": "npm run karma -- --auto-watch --no-single-run",
     "karma:all": "npm run karma -- --browsers=PhantomJS,Chrome,Firefox",
+    "test": "mocha server/spec -R nyan",
     "packages": "npm list --depth=0",
     "package:purge": "rm -rf node_modules",
     "package:reinstall": "npm run package:purge && npm install",
