@@ -9,12 +9,13 @@
     "karma": "karma start ./client/karma.config.js",
     "karma:watch": "npm run karma -- --auto-watch --no-single-run",
     "karma:all": "npm run karma -- --browsers=PhantomJS,Chrome,Firefox",
-    "test": "mocha server/spec -R nyan",
+    "mocha": "mocha client/spec/socketHandler.spec.js",
     "packages": "npm list --depth=0",
     "package:purge": "rm -rf node_modules",
     "package:reinstall": "npm run package:purge && npm install",
     "package:updates": "./node_modules/.bin/ncu '/^(?!npm-shrinkwrap|jsdom).*$/'",
-    "package:upgrade": "npm run package:updates -- -u"
+    "package:upgrade": "npm run package:updates -- -u",
+    "test": "mocha server/spec -R nyan"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
