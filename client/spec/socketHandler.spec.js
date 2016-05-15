@@ -14,18 +14,18 @@ describe('Socket Handler Suite', function(){
         };
 
     beforeEach(function(done){
-        client = io.connect('http://localhost:3000', options);
+        client = io.connect('http://localhost:3000');
 
         client.on('connect', function() {
             console.log('connecting...');
             done();
         });
 
-        client.on('echo', function(msg){
-            console.log('reached echo');
-            m = msg;
-            done();
-        });
+        // client.on('echo', function(msg){
+        //     console.log('reached echo');
+        //     m = msg;
+        //     done();
+        // });
 
         client.on('disconnect', function(){
             console.log('disconnected...');
@@ -49,33 +49,22 @@ describe('Socket Handler Suite', function(){
 
     it('should echo a message', function(done){
 
+        client.emit('echo', 'Hello World');
 
-
-        client.emit('echo', 'Hello TEST');
-
-
-        m.should.equal('Hello World');
-
-
-
-        done();
-    });
-
-    xit('should check the room', function(done){
-
-        var client = io.connect('http://localhost:3000', options);
-
-        client.emit('init query', 'SELECT * from bitches WHERE category = pawg');
-
-        client.once('connection', function() {
-            client.once('init query', function(msg){
-                msg.should.equal({data: 'initial query'});
-
-                client.disconnect();
-                done();
-            });
+        client.on('echo', function(data){
+            data.should.equal('Hello World');
+            done();
         });
 
-        done();
+    });
+
+    it('should check the room', function(done){
+
+        client.emit('init query', 'SELECT dat.ass FROM bitches dat WHERE dat.ass = fat');
+
+        client.on('init query', function(data){
+            data.should.equal('initial query result');
+            done();
+        });
     });
 });
