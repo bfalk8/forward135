@@ -1,52 +1,70 @@
+'use strict';
+
 var chai = require('chai'),
     mocha = require('mocha'),
     should = chai.should();
 
 var io = require('socket.io-client');
 
-describe("Socket Handler Suite", function(){
-    var server,
+describe('Socket Handler Suite', function(){
+    var server, client, m = '',
         options = {
             transports: ['websocket'],
             'force new connection': true
         };
 
     beforeEach(function(done){
-        // start server
-        server = require('../../index.js').server;
+        client = io.connect('http://localhost:3000');
+
+        client.on('connect', function() {
+            console.log('connecting...');
+            done();
+        });
+
+        // client.on('echo', function(msg){
+        //     console.log('reached echo');
+        //     m = msg;
+        //     done();
+        // });
+
+        client.on('disconnect', function(){
+            console.log('disconnected...');
+        });
+
+
+
+    });
+
+    afterEach(function(done){
+        //Cleanup
+        if(client.connected){
+            console.log('disconnecting...');
+            client.disconnect();
+        }else{
+            console.log('no connection to break...');
+        }
 
         done();
     });
 
-    it("should echo a message", function(done){
-        var client = io.connect("http://localhost:3000", options);
+    it('should echo a message', function(done){
 
-        client.once("connection", function() {
-            client.once("echo", function(msg){
-                msg.should.equal("Hello World");
+        client.emit('echo', 'Hello World');
 
-                client.disconnect();
-                done();
-            });
+        client.on('echo', function(data){
+            data.should.equal('Hello World');
+            done();
         });
 
-        client.emit("echo", "Hello World");
-        done();
     });
-    
-    it("should return a SocketHandler", function(done){
-        var client = io.connect("http://localhost:3000", options);
 
-        client.once("connection", function() {
-            client.once("echo", function(msg){
-                msg.should.equal("Hello World");
+    it('should check the room', function(done){
 
-                client.disconnect();
-                done();
-            });
+        client.emit('init query', 'SELECT dat.ass FROM bitches dat WHERE dat.ass = fat');
+
+        client.on('init query', function(data){
+            data.should.equal('initial query result');
+            done();
         });
-
-        client.emit("echo", "Hello World");
-        done();
     });
 });
