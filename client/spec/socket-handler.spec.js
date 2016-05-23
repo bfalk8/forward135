@@ -1,31 +1,25 @@
-'use strict';
-
 var chai = require('chai'),
-    mocha = require('mocha'),
-    should = chai.should();
+    should = chai.should;
 
 var io = require('socket.io-client');
 
+var socketURL = 'http://127.0.0.1:3000';
+
+var options = {
+    transports: ['websocket'],
+    'force new connection': true
+};
+
 describe('Socket Handler Suite', function(){
-    var server, client, m = '',
-        options = {
-            transports: ['websocket'],
-            'force new connection': true
-        };
+    var client;
 
     beforeEach(function(done){
-        client = io.connect('http://localhost:3000');
+        client = io.connect(socketURL, options);
 
         client.on('connect', function() {
             console.log('connecting...');
             done();
         });
-
-        // client.on('echo', function(msg){
-        //     console.log('reached echo');
-        //     m = msg;
-        //     done();
-        // });
 
         client.on('disconnect', function(){
             console.log('disconnected...');
@@ -63,7 +57,7 @@ describe('Socket Handler Suite', function(){
         client.emit('init query', 'SELECT dat.ass FROM bitches dat WHERE dat.ass = fat');
 
         client.on('init query', function(data){
-            data.should.equal('initial query result');
+            data.should.deep.equal({data: 'initial query result'});
             done();
         });
     });

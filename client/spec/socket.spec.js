@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var io     = require('socket.io-client');
 
-var socketURL = 'http://127.0.0.1:3000';
+var socketURL = 'http://localhost:3000';
 
 var options = {
     transports: ['websocket'],

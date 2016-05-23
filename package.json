@@ -9,7 +9,7 @@
     "karma": "karma start ./client/karma.config.js",
     "karma:watch": "npm run karma -- --auto-watch --no-single-run",
     "karma:all": "npm run karma -- --browsers=PhantomJS,Chrome,Firefox",
-    "mocha": "mocha client/spec/socketHandler.spec.js",
+    "test2": "mocha client/spec/socketHandler.spec.js",
     "packages": "npm list --depth=0",
     "package:purge": "rm -rf node_modules",
     "package:reinstall": "npm run package:purge && npm install",
