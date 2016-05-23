@@ -15,7 +15,6 @@ class WebSocket {
         this.socket.on('connect', () => {
             let sessionId = this.socket.io.engine.id;
             console.log("WEBSOCKET connected with session id", sessionId);
-            this.socket.emit('init query', 'select * from bitches where ass = "phat"');
         });
 
         this.socket.on('disconnect', () => console.log('disconnected') );
