@@ -32,10 +32,10 @@ class SocketHandler {
         }
         new IVM().addQuery(query);
         socket.join(query);
-        socket.emit('init query', 'initial query result');
+        socket.emit('init query', {data: 'initial query result'});
         socket.emit('diff query', new IVM().getQuery(query));
     }
-    
+
     echo(socket, data) {
         socket.emit('echo', data);
     }

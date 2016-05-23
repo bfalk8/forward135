@@ -9,7 +9,7 @@ class IVM {
             instance = this;
         }
         this.queries = {};
-        
+
         // returns singleton
         return instance;
     }
