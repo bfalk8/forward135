@@ -1,42 +1,49 @@
 'use strict';
 
-let instance = null;
+// let instance      = null;
+var SocketHandler = require('./SocketHandler');
+function IVM() {
+    var ivm      = this;
+    var socketHandler = new SocketHandler();
 
-class IVM {
-    constructor(){
-        // check for singleton pattern
-        if(!instance) {
-            instance = this;
-        }
-        this.queries = {};
+    ivm.queries = {};
 
-        // returns singleton
-        return instance;
-    }
-
-    addQuery(query) {
+    ivm.addQuery = (query) =>
+    {
         this.queries[query] = {
             query: query,
             insertDiff: 'hey you got a query',
             updateDiff: 'hey you got an update',
-            deleteDiff: 'hey you got a delete' };
-    }
+            deleteDiff: 'hey you got a delete'
+        };
+    };
 
-    changeInsertDiff(query, diff) {
-        this.queries[query].insertDiff = diff;
-    }
+    ivm.sendInsertDiff = (query) =>
+    {
+        // console.log('here we are in send insert diff');
+        socketHandler.sendQueryDiff(ivm.queries[query]);
+    };
 
-    changeUpdateDiff(query, diff) {
-        this.queries[query].updateDiff = diff;
-    }
+    ivm.changeInsertDiff = (query, diff) =>
+    {
+        ivm.queries[query].insertDiff = diff;
+        ivm.sendInsertDiff(query);
+    };
 
-    changeDeleteDiff(query, diff) {
-        this.queries[query].deleteDiff = diff;
-    }
+    ivm.changeUpdateDiff = (query, diff) =>
+    {
+        ivm.queries[query].updateDiff = diff;
+    };
 
-    getQuery(query) {
-        return this.queries[query];
+    ivm.changeDeleteDiff = (query, diff) =>
+    {
+        ivm.queries[query].deleteDiff = diff;
+    };
+
+    ivm.getQuery = (query) =>
+    {
+        return ivm.queries[query];
     }
 }
 
-module.exports = IVM;
+module.exports = new IVM();

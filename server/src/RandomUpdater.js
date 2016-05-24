@@ -1,31 +1,36 @@
+'use strict';
+
 var Q = require('q');
 
-class Updater {
+class RandomUpdater {
 
-    constructor(db, maxInterval) {
+    constructor(db, maxInterval, period, ivm) {
         this.db          = db;
         this.maxInterval = maxInterval;
+        this.period      = period;
     }
 
     start(callBack) {
-        var deferred = Q.defer();
-        var count    = 0;
+        let deferred = Q.defer();
+        let count    = 0;
         var interval = setInterval(() => {
-            var id = this.db.store[Math.floor(Math.random() * this.db.store.length)].id;
+            let id = this.db.store[Math.floor(Math.random() * this.db.store.length)].id;
+            this.db.update(id, {updatedAt: Date.now()}).then(() => {
+                // console.log('Callback called from updater');
+                callBack('select *', `update count ${count++}`);
+            });
 
-            this.db.update(id, {updatedAt: Date.now()}).then(callBack);
-
-            if (++count > this.maxInterval)
+            if (this.maxInterval >= 0 && ++count > this.maxInterval)
             {
                 clearInterval(interval);
-                deferred.resolve();
+                return deferred.resolve({});
             }
 
-        }, 1000);
+        }, this.period);
 
-        return deferred.promise();
+        return deferred.promise;
 
     }
 }
 
-module.exports = Updater;
+module.exports = RandomUpdater;
