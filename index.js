@@ -5,6 +5,7 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var path = require('path');
+var Main = require('./server/src/Main');
 // var io = require('socket.io')(http);
 var socket = require('./server/src/SocketHandler');
 
@@ -14,7 +15,7 @@ app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'client')));
 
 /** Socket IO initialization */
-var socketio = new socket(http);
+// var socketio = new socket(http);
 
 
 http.listen(3000, function(){
@@ -37,3 +38,5 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+new Main(http).run();
