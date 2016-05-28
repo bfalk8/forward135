@@ -35,90 +35,103 @@ CREATE TABLE orders (
     is_cart BOOLEAN NOT NULL
 );
 
--- Triggers
+-- Fact Table Trigger
 -- insert, update, delete
--- TODO: do we want a trigger FOR EACH ROW that updates, or FOR EACH STATEMENT? --> STATEMENT
--- TODO: do we want them BEFORE, AFTER, or INSTEAD OF? --> AFTER
+
+CREATE OR REPLACE FUNCTION
+    notify_fact_table()
+    RETURNS TRIGGER AS $$
+DECLARE
+BEGIN
+    PERFORM pg_notify('watchers', TG_TABLE_NAME || ',id,' || NEW.id);
+    RETURN new;
+END;
+$$ LANGUAGE plpgsql;
+
+DROP TRIGGER watch_fact_table_insert ON orders;
+CREATE TRIGGER watch_fact_table_insert AFTER INSERT ON orders
+FOR EACH ROW EXECUTE PROCEDURE notify_fact_table();
+
 
 ---- users
 ------ functions
-CREATE OR REPLACE FUNCTION
-    notify_users()
-    RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-    PERFORM pg_notify('watch_users', 'id,' || NEW.id || ',name,' || NEW.name || ',role,' || NEW.role || ',age,' || NEW.age || ',state,' || NEW.state);
-    RETURN new;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION
-    notify_users_id()
-    RETURNS TRIGGER AS $$
-    DECLARE
-    BEGIN
-        PERFORM pg_notify('watch_users_id', 'id,' || NEW.id);
-        RETURN new;
-    END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION
-    notify_users_name()
-    RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-    PERFORM pg_notify('watch_users_name', 'name,' || NEW.name);
-    RETURN new;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION
-    notify_users_role()
-    RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-    PERFORM pg_notify('watch_users_role', 'role,' || NEW.role);
-    RETURN new;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION
-    notify_users_age()
-    RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-    PERFORM pg_notify('watch_users_age', 'age,' || NEW.age);
-    RETURN new;
-END;
-$$ LANGUAGE plpgsql;
-
-CREATE OR REPLACE FUNCTION
-    notify_users_state()
-    RETURNS TRIGGER AS $$
-DECLARE
-BEGIN
-    PERFORM pg_notify('watch_users_state', 'state,' || NEW.state);
-    RETURN new;
-END;
-$$ LANGUAGE plpgsql;
-
------- triggers
--------- update
-CREATE TRIGGER watch_user_update_id AFTER UPDATE OF id ON users
-FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_id();
-CREATE TRIGGER watch_user_update_name AFTER UPDATE OF name ON users
-FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_name();
-CREATE TRIGGER watch_user_update_role AFTER UPDATE OF role ON users
-FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_role();
-CREATE TRIGGER watch_user_update_age AFTER UPDATE OF age ON users
-FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_age();
-CREATE TRIGGER watch_user_update_state AFTER UPDATE OF state ON users
-FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_state();
-CREATE TRIGGER watch_user_update_state AFTER UPDATE ON users
-FOR EACH STATEMENT EXECUTE PROCEDURE notify_users();
--------- insert
-CREATE TRIGGER watch_user_insert AFTER INSERT ON users
-FOR EACH STATEMENT EXECUTE PROCEDURE notify_users();
--------- delete
-CREATE TRIGGER watch_user_delete AFTER DELETE ON users
-FOR EACH STATEMENT EXECUTE PROCEDURE notify_users();
+-- CREATE OR REPLACE FUNCTION
+--     notify_users()
+--     RETURNS TRIGGER AS $$
+-- DECLARE
+-- BEGIN
+--     PERFORM pg_notify('watchers', 'id,' || NEW.id || ',name,' || NEW.name || ',role,' || NEW.role || ',age,' || NEW.age || ',state,' || NEW.state);
+--     RETURN new;
+-- END;
+-- $$ LANGUAGE plpgsql;
+--
+-- CREATE OR REPLACE FUNCTION
+--     notify_users_id()
+--     RETURNS TRIGGER AS $$
+--     DECLARE
+--     BEGIN
+--         PERFORM pg_notify('watch_users_id', 'id,' || NEW.id);
+--         RETURN new;
+--     END;
+-- $$ LANGUAGE plpgsql;
+--
+-- CREATE OR REPLACE FUNCTION
+--     notify_users_name()
+--     RETURNS TRIGGER AS $$
+-- DECLARE
+-- BEGIN
+--     PERFORM pg_notify('watch_users_name', 'name,' || NEW.name);
+--     RETURN new;
+-- END;
+-- $$ LANGUAGE plpgsql;
+--
+-- CREATE OR REPLACE FUNCTION
+--     notify_users_role()
+--     RETURNS TRIGGER AS $$
+-- DECLARE
+-- BEGIN
+--     PERFORM pg_notify('watch_users_role', 'role,' || NEW.role);
+--     RETURN new;
+-- END;
+-- $$ LANGUAGE plpgsql;
+--
+-- CREATE OR REPLACE FUNCTION
+--     notify_users_age()
+--     RETURNS TRIGGER AS $$
+-- DECLARE
+-- BEGIN
+--     PERFORM pg_notify('watch_users_age', 'age,' || NEW.age);
+--     RETURN new;
+-- END;
+-- $$ LANGUAGE plpgsql;
+--
+-- CREATE OR REPLACE FUNCTION
+--     notify_users_state()
+--     RETURNS TRIGGER AS $$
+-- DECLARE
+-- BEGIN
+--     PERFORM pg_notify('watch_users_state', 'state,' || NEW.state);
+--     RETURN new;
+-- END;
+-- $$ LANGUAGE plpgsql;
+--
+-- ------ triggers
+-- -------- update
+-- CREATE TRIGGER watch_user_update_id AFTER UPDATE OF id ON users
+-- FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_id();
+-- CREATE TRIGGER watch_user_update_name AFTER UPDATE OF name ON users
+-- FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_name();
+-- CREATE TRIGGER watch_user_update_role AFTER UPDATE OF role ON users
+-- FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_role();
+-- CREATE TRIGGER watch_user_update_age AFTER UPDATE OF age ON users
+-- FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_age();
+-- CREATE TRIGGER watch_user_update_state AFTER UPDATE OF state ON users
+-- FOR EACH STATEMENT EXECUTE PROCEDURE notify_users_state();
+-- CREATE TRIGGER watch_user_update_state AFTER UPDATE ON users
+-- FOR EACH STATEMENT EXECUTE PROCEDURE notify_users();
+-- -------- insert
+-- CREATE TRIGGER watch_user_insert AFTER INSERT ON users
+-- FOR EACH STATEMENT EXECUTE PROCEDURE notify_users();
+-- -------- delete
+-- CREATE TRIGGER watch_user_delete AFTER DELETE ON users
+-- FOR EACH STATEMENT EXECUTE PROCEDURE notify_users();
