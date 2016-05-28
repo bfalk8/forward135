@@ -2,6 +2,8 @@
 
 // let instance      = null;
 var SocketHandler = require('./SocketHandler');
+var DatabaseQuery = require('./DatabaseQuery');
+
 const IVM = {
     socketHandler: new SocketHandler(),
 
@@ -17,9 +19,14 @@ const IVM = {
         };
     },
 
+    /**
+     * change: {table: '<table that changed>', column: '<column the id is associated with>', id: '<id of new tuple>'}
+     * @param change
+     */
     tableUpdate: (change) =>
     {
         console.log(change);
+        new DatabaseQuery('postgres://postgres:test@localhost:5432/forward135', 'select * from foo');
     }
 };
 

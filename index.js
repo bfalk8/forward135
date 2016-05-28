@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 /** Socket IO initialization */
 // var socketio = new socket(http);
-var databaseWatcher = new DatabaseListener();
+//var databaseWatcher = new DatabaseListener();
 
 
 http.listen(3000, function(){
@@ -41,4 +41,5 @@ app.use(function(err, req, res, next) {
     });
 });
 
-new Main(http).run();
+var pgConString = "postgres://postgres:test@localhost:5432/forward135";
+new Main(http, pgConString).run();

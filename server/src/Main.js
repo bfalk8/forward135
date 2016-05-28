@@ -4,12 +4,13 @@
 var SocketHandler    = require('./SocketHandler');
 var RandomUpdater    = require('./RandomUpdater');
 var DatabaseListener = require('./DatabaseListener');
+var Database         = require('./MockDatabase');
 
 class Main {
 
-    constructor(http) {
+    constructor(http, dbconstring) {
         this.socket   = new SocketHandler(http);
-        this.database = new DatabaseListener();
+        this.dbListener = new DatabaseListener(dbconstring);
         this.database = new Database(30);
         this.ivm      = require('./IVM');
         this.updater  = new RandomUpdater(this.database, -1, 5000, this.ivm);
