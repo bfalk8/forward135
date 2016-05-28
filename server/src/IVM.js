@@ -43,7 +43,12 @@ function IVM() {
     ivm.getQuery = (query) =>
     {
         return ivm.queries[query];
-    }
+    };
+
+    ivm.tableUpdate = (change) =>
+    {
+        console.log(change);
+    };
 }
 
 module.exports = new IVM();
