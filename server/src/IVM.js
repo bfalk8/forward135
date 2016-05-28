@@ -2,6 +2,7 @@
 
 // let instance      = null;
 var SocketHandler = require('./SocketHandler');
+var DatabaseQuery = require('./DatabaseQuery');
 function IVM() {
     var ivm      = this;
     var socketHandler = new SocketHandler();
@@ -48,6 +49,7 @@ function IVM() {
     ivm.tableUpdate = (change) =>
     {
         console.log(change);
+        new DatabaseQuery('postgres://postgres:test@localhost:5432/forward135', 'select * from foo');
     };
 }
 
