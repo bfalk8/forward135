@@ -1,22 +1,16 @@
 'use strict';
 
-// let instance      = null;
 var SocketHandler = require('./SocketHandler');
 var DatabaseQuery = require('./DatabaseQuery');
+let Tables        = require('./Tables');
 
 const IVM = {
     socketHandler: new SocketHandler(),
-
     queries: {},
+    tables: new Tables(),
 
-    addQuery: (query) =>
-    {
-        this.queries[query] = {
-            query: query,
-            insertDiff: 'hey you got a query',
-            updateDiff: 'hey you got an update',
-            deleteDiff: 'hey you got a delete'
-        };
+    addQuery: (tName, query) => {
+        this.tables.table(tName).query = query;
     },
 
     /**
@@ -24,10 +18,8 @@ const IVM = {
      * change: {table: '<table that changed>', column: '<column the id is associated with>', id: '<id of new tuple>'}
      * @param change
      */
-    tableUpdate: (change) =>
-    {
+    tableUpdate: (change) => {
         console.log(change);
-        new DatabaseQuery('postgres://postgres:test@localhost:5432/forward135', 'select * from foo');
     }
 };
 
