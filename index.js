@@ -5,15 +5,18 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var path = require('path');
+var Main = require('./server/src/Main');
 // var io = require('socket.io')(http);
-var socket = require('./server/src/SocketHandler');
+// var socket = require('./server/src/SocketHandler');
+// var DatabaseListener = require('./server/src/DatabaseListener');
 
 app.set('views', path.join(__dirname, './server/views'));
 app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'client')));
 
 /** Socket IO initialization */
-var socketio = new socket(http);
+// var socketio = new socket(http);
+//var databaseWatcher = new DatabaseListener();
 
 
 http.listen(3000, function(){
@@ -41,3 +44,6 @@ app.use(function(err, req, res, next) {
         error: {}
     });
 });
+
+var pgConString = 'postgresql://localhost:5432/postgres';//"postgres://postgres:test@localhost:5432/forward135";
+new Main(http, pgConString).run();

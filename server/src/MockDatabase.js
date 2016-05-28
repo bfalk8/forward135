@@ -1,35 +1,39 @@
+'use strict';
 
-var N_obj = 5;
-var objList = [];
-for(var i = 0; i < N_obj; i++)
-{
-    var obj = {
-        id: i,
-        name: 'test_obj_' + i,
-        updateCount: 0,
-        timestamp: Date.now()
-    };
-    objList.push(obj);
-}
+var _ = require('lodash');
+var Q = require('q');
 
-console.log(objList);
+class MockDatabase {
 
-var interval_cnt = 0;
-var max_interval = 10;
-var interval = setInterval(randomUpdate, 1000);
-
-function randomUpdate()
-{
-    var N = objList.length;
-    var randIdx = Math.floor(Math.random() * N);
-    objList[randIdx].timestamp = Date.now();
-    objList[randIdx].updateCount++;
-
-    interval_cnt++;
-    if(interval_cnt == max_interval)
-    {
-        clearInterval(interval);
+    constructor(size) {
+        this.store = [];
+        this.loadDb(size);
     }
-    console.log(objList);
+
+    loadDb(size) {
+        for (var i = 0; i < size; i++)
+        {
+            var obj = {
+                id: i,
+                name: 'test_obj_' + i,
+                updateCount: 0,
+                timestamp: Date.now()
+            };
+            this.store.push(obj);
+        }
+    }
+
+    update(id, delta) {
+        var obj = _.find(this.store, (o) => o.id === id);
+        _.merge(obj, delta);
+        return Q.when(obj);
+    }
+
+    add(obj) {
+        this.store.push(obj);
+        return Q.when(obj);
+    }
+
 }
 
+module.exports = MockDatabase;
