@@ -32,6 +32,7 @@ class SocketHandler {
         } else {
             console.log('Room: ' + query + ' exists!');
         }
+        
         handler.ivm.addQuery(query);
         socket.join(query);
         socket.emit('init query', {data: 'initial query result'});
