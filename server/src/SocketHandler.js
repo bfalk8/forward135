@@ -26,11 +26,11 @@ class SocketHandler {
         var query = data;
         if(!this.io.sockets.adapter.rooms[query]){
             console.log('Room: ' + query + ' created!');
-            this.ivm.addQuery(query);
+            this.ivm.addQuery(query);   //TODO: is this correct?
         } else {
             console.log('Room: ' + query + ' exists!');
         }
-        new IVM().addQuery(query);
+        new IVM().addQuery(query);     // TODO: is this correct? IVM is a singleton -- does new clear the queries?
         socket.join(query);
         socket.emit('init query', {data: 'initial query result'});
         socket.emit('diff query', new IVM().getQuery(query));
