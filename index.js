@@ -8,7 +8,7 @@ var path = require('path');
 var Main = require('./server/src/Main');
 // var io = require('socket.io')(http);
 var socket = require('./server/src/SocketHandler');
-var DatabaseListener = require('./server/src/DatabaseListener');
+//var DatabaseListener = require('./server/src/DatabaseListener');
 
 
 app.set('views', path.join(__dirname, './server/views'));
@@ -17,7 +17,6 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 /** Socket IO initialization */
 var socketio = new socket(http);
-var databaseWatcher = new DatabaseListener();
 
 
 http.listen(3000, function(){
@@ -41,4 +40,5 @@ app.use(function(err, req, res, next) {
     });
 });
 
-new Main(http).run();
+var pgConString = "postgres://postgres:test@localhost:5432/forward135";
+new Main(http, pgConString).run();
