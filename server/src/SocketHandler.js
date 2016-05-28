@@ -26,6 +26,7 @@ class SocketHandler {
     checkRoom(socket, data){
         console.log('CHECK ROOM: ' + data);
         var query = data;
+        
         if(!this.io.sockets.adapter.rooms[query]){
             console.log('Room: ' + query + ' created!');
             this.ivm.addQuery(query);
@@ -34,6 +35,7 @@ class SocketHandler {
         }
         
         handler.ivm.addQuery(query);
+        
         socket.join(query);
         socket.emit('init query', {data: 'initial query result'});
         socket.emit('diff query', handler.ivm.getQuery(query));

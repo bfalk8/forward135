@@ -41,5 +41,5 @@ app.use(function(err, req, res, next) {
     });
 });
 
-var pgConString = "postgres://postgres:test@localhost:5432/forward135";
+const pgConString = 'postgres://postgres:test@localhost:5432/forward135';
 new Main(http, pgConString).run();
