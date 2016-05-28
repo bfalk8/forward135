@@ -18,7 +18,7 @@ const IVM = {
      * change: {table: '<table that changed>', column: '<column the id is associated with>', id: '<id of new tuple>'}
      * @param change
      */
-    tableUpdate: (change) => {
+    tableUpdate: change => {
         console.log(change);
     }
 };
