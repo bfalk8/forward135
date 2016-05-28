@@ -2,6 +2,9 @@
 
 let instance = null;
 
+var DAO = require('./DAO');
+
+
 class IVM {
     constructor(){
         // check for singleton pattern
