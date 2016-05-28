@@ -8,11 +8,12 @@ class DatabaseListener{
         pg.connect(pgConString, function(err, client) {
             if(err) {
                 console.log(err);
+            }else{
+                client.on('notification', function(msg) {
+                    console.log(msg);
+                });
+                var query = client.query("LISTEN watchers");
             }
-            client.on('notification', function(msg) {
-                console.log(msg);
-            });
-            var query = client.query("LISTEN watchers");
         });
     }
 }
