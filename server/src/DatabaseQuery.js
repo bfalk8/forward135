@@ -3,7 +3,7 @@ var pg = require('pg');
 
 class DatabaseQuery{
     constructor(constring, query){
-        pg.connect(constring, function(err, client, done) {
+        pg.connect(constring, function(err, client) {
            if(err){
                // console.log(err);
            } else {
