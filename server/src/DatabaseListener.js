@@ -2,7 +2,6 @@
 
 var pg = require('pg');
 var ivm = require('./IVM');
-var pgConString = "postgres://postgres:test@localhost:5432/forward135";
 
 class DatabaseListener{
     constructor(dbString){
