@@ -7,6 +7,7 @@ var http = require('http').Server(app);
 var path = require('path');
 // var io = require('socket.io')(http);
 var socket = require('./server/src/SocketHandler');
+var DatabaseListener = require('./server/src/DatabaseListener');
 
 
 app.set('views', path.join(__dirname, './server/views'));
@@ -15,6 +16,7 @@ app.use(express.static(path.join(__dirname, 'client')));
 
 /** Socket IO initialization */
 var socketio = new socket(http);
+var databaseWatcher = new DatabaseListener();
 
 
 http.listen(3000, function(){
