@@ -8,6 +8,7 @@ var path = require('path');
 var Main = require('./server/src/Main');
 // var io = require('socket.io')(http);
 var socket = require('./server/src/SocketHandler');
+var DatabaseListener = require('./server/src/DatabaseListener');
 
 
 app.set('views', path.join(__dirname, './server/views'));
@@ -15,7 +16,8 @@ app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'client')));
 
 /** Socket IO initialization */
-// var socketio = new socket(http);
+var socketio = new socket(http);
+var databaseWatcher = new DatabaseListener();
 
 
 http.listen(3000, function(){
