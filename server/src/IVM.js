@@ -4,6 +4,7 @@ var SocketHandler = require('./SocketHandler');
 var DatabaseQuery = require('./DatabaseQuery');
 let Tables        = require('./Tables');
 
+
 const IVM = {
     socketHandler: new SocketHandler(),
     queries: {},
