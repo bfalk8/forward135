@@ -1,12 +1,13 @@
 'use strict';
 
-// let instance      = null;
 var SocketHandler = require('./SocketHandler');
 var DatabaseQuery = require('./DatabaseQuery');
-
+var DAO           = require('./DAO');
 
 const IVM = {
     socketHandler: new SocketHandler(),
+
+    // dao: new DAO(con),
 
     queries: {},
 
