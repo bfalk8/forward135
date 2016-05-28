@@ -35,7 +35,7 @@ class SocketHandler {
         socket.emit('init query', {data: 'initial query result'});
         socket.emit('diff query', new IVM().getQuery(query));
     }
-    
+
     echo(socket, data) {
         socket.emit('echo', data);
     }
