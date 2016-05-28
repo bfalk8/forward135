@@ -10,7 +10,6 @@ var Main = require('./server/src/Main');
 // var socket = require('./server/src/SocketHandler');
 // var DatabaseListener = require('./server/src/DatabaseListener');
 
-
 app.set('views', path.join(__dirname, './server/views'));
 app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'client')));
