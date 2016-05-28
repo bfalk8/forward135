@@ -10,7 +10,6 @@ var Main = require('./server/src/Main');
 // var socket = require('./server/src/SocketHandler');
 // var DatabaseListener = require('./server/src/DatabaseListener');
 
-
 app.set('views', path.join(__dirname, './server/views'));
 app.set('view engine', 'jade');
 app.use(express.static(path.join(__dirname, 'client')));
@@ -23,6 +22,11 @@ app.use(express.static(path.join(__dirname, 'client')));
 http.listen(3000, function(){
     console.log('listening on *:3000');
 });
+
+
+// init database subapp
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -41,5 +45,5 @@ app.use(function(err, req, res, next) {
     });
 });
 
-var pgConString = "postgres://postgres:test@localhost:5432/forward135";
+var pgConString = 'postgresql://localhost:5432/postgres';//"postgres://postgres:test@localhost:5432/forward135";
 new Main(http, pgConString).run();

@@ -28,11 +28,11 @@ class SocketHandler {
         var query = data;
         if(!this.io.sockets.adapter.rooms[query]){
             console.log('Room: ' + query + ' created!');
-            this.ivm.addQuery(query);
+            this.ivm.addQuery(query);   //TODO: is this correct?
         } else {
             console.log('Room: ' + query + ' exists!');
         }
-        
+
         handler.ivm.addQuery(query);
         socket.join(query);
         socket.emit('init query', {data: 'initial query result'});
