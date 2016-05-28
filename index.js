@@ -21,6 +21,11 @@ http.listen(3000, function(){
     console.log('listening on *:3000');
 });
 
+
+// init database subapp
+
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
     var err = new Error('Not Found');
