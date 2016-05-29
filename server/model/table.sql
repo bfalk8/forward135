@@ -48,14 +48,21 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
-DROP TRIGGER watch_fact_table_insert ON orders;
+DROP TRIGGER IF EXISTS watch_fact_table_insert ON orders;
 CREATE TRIGGER watch_fact_table_insert AFTER INSERT ON orders
 FOR EACH ROW EXECUTE PROCEDURE notify_fact_table();
 
+
 INSERT INTO categories ( name, description) VALUES ('tech', 'techy McTechface');
 INSERT INTO products (name, sku, category_id, price, is_delete) VALUES ('surface', 'fucksku',1,10, false);
-
 INSERT INTO orders (user_id, product_id, quantity, price, is_cart) VALUES (5, 2, 2, 3.5, false);
+
+-- FIXME Change the filepath
+-- COPY users(name, role, age, state) FROM '/Users/alxrsngrtn/Github/forward135/server/model/users.txt' DELIMITER ',' CSV;
+-- COPY categories(name, description) FROM '/Users/alxrsngrtn/Github/forward135/server/model/categories.txt' DELIMITER ',' CSV;
+-- COPY products(name, sku, category_id, price, is_delete) FROM '/Users/alxrsngrtn/Github/forward135/server/model/products.txt' DELIMITER ',' CSV;
+-- COPY orders(user_id, product_id, quantity, price, is_cart) FROM '/Users/alxrsngrtn/Github/forward135/server/model/orders.txt' DELIMITER ',' CSV;
+
 
 
 ---- users

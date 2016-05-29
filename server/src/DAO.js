@@ -1,10 +1,10 @@
 'use strict';
 
 var pg = require('pg');
+var config = require('../../config.json');
 
 let internalServerError = {status: 500, response: 'An error occurred'};
-let conStr = 'postgresql://localhost:5432/postgres';
-
+let conStr = config.connectionString;
 const DAO = {
     makeParameterizedQuery: (qry, argArray) => {
         pg.connect(conStr, function(err, client, done){
@@ -47,7 +47,7 @@ const DAO = {
         });
     },
 
-    makePreparedStatement: (queryText, queryName, queryValue) => {
+    makePreparedStatement: (queryName, queryText, queryValue) => {
         // prepare config with optional fields
         var config = {text: queryText};
         if(queryName){ config.name = queryName; }
