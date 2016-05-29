@@ -13,11 +13,11 @@ class Main {
         this.dbListener = new DatabaseListener(dbconstring);
         this.database = new Database(30);
         this.ivm      = require('./IVM');
-        this.updater  = new RandomUpdater(this.database, -1, 5000, this.ivm);
+        this.updater  = new RandomUpdater( -1, 5000);
     }
 
     run() {
-        this.updater.start(this.ivm.changeInsertDiff);
+        this.updater.start();
     }
 }
 
