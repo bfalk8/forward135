@@ -25,20 +25,19 @@ class SocketHandler {
 
     checkRoom(socket, data){
         console.log('CHECK ROOM: ' + data);
-        var query = data;
-        
+        var table = data.table;
+        var query = data.query;
         if(!this.io.sockets.adapter.rooms[query]){
             console.log('Room: ' + query + ' created!');
-            this.ivm.addQuery(query);   //TODO: is this correct?
+            handler.ivm.addQuery(table, query);   //TODO: is this correct?
         } else {
             console.log('Room: ' + query + ' exists!');
         }
 
-        handler.ivm.addQuery(query);
-        
+        // handler.ivm.addQuery(table, query);
         socket.join(query);
         socket.emit('init query', {data: 'initial query result'});
-        socket.emit('diff query', handler.ivm.getQuery(query));
+        // socket.emit('diff query', handler.ivm.getQuery(query));
     }
 
     echo(socket, data) {
