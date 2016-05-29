@@ -1,25 +1,22 @@
 'use strict';
 
 var Q = require('q');
+var dao = require('./DAO');
+const insert = 'INSERT INTO orders (user_id, product_id, quantity, price, is_cart) VALUES (1, 1, $1, $2, FALSE)';
 
 class RandomUpdater {
 
-    constructor(db, maxInterval, period, ivm) {
-        this.db          = db;
+    constructor(maxInterval, period) {
         this.maxInterval = maxInterval;
         this.period      = period;
     }
 
-    start(callBack) {
+    start() {
         let deferred = Q.defer();
         let count    = 0;
         var interval = setInterval(() => {
-            let id = this.db.store[Math.floor(Math.random() * this.db.store.length)].id;
-            this.db.update(id, {updatedAt: Date.now()}).then(() => {
-                // console.log('Callback called from updater');
-                callBack('select *', `update count ${count++}`);
-            });
-
+            
+            dao.makePreparedStatement('randomInsert', insert, [Math.floor(Math.random()), Math.random().toFixed(2)]);
             if (this.maxInterval >= 0 && ++count > this.maxInterval)
             {
                 clearInterval(interval);

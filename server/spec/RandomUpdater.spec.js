@@ -5,7 +5,7 @@ var chai   = require('chai'),
     expect = chai.expect,
     should = chai.should();
 
-describe('RandomUpdate', () => {
+xdescribe('RandomUpdate', () => {
     let db, RandomUpdater;
 
     before(done => {
