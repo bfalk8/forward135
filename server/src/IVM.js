@@ -2,23 +2,17 @@
 
 var SocketHandler = require('./SocketHandler');
 var DatabaseQuery = require('./DatabaseQuery');
-var DAO           = require('./DAO');
+
+let Tables        = require('./Tables');
+
 
 const IVM = {
     socketHandler: new SocketHandler(),
-
-    // dao: new DAO(con),
-
     queries: {},
+    tables: new Tables(),
 
-    addQuery: (query) =>
-    {
-        this.queries[query] = {
-            query: query,
-            insertDiff: 'hey you got a query',
-            updateDiff: 'hey you got an update',
-            deleteDiff: 'hey you got a delete'
-        };
+    addQuery: (tName, query) => {
+        this.tables.table(tName).query = query;
     },
 
     /**
@@ -26,10 +20,8 @@ const IVM = {
      * change: {table: '<table that changed>', column: '<column the id is associated with>', id: '<id of new tuple>'}
      * @param change
      */
-    tableUpdate: (change) =>
-    {
+    tableUpdate: change => {
         console.log(change);
-        new DatabaseQuery('postgres://postgres:test@localhost:5432/forward135', 'select * from foo');
     }
 };
 
