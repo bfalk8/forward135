@@ -7,12 +7,12 @@ let Tables        = require('./Tables');
 
 
 const IVM = {
-    socketHandler: new SocketHandler(),
     queries: {},
     tables: {},
 
     init: () => {
         this.tables = new Tables();
+        this.socketHandler = new SocketHandler();
     },
 
     addQuery: (tName, query) => {
@@ -26,8 +26,12 @@ const IVM = {
      * @param change
      */
     tableUpdate: change => {
-        var queries = this.tables.table(change.table);
-        console.log(queries);
+        var queries = this.tables[change.table];
+        if (!queries) {
+            return;
+        }
+        
+        this.socketHandler.sendQueryDiff(queries);
     }
 };
 
