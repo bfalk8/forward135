@@ -35,7 +35,7 @@ def RanStateGen():
     return random.choice(state)
 
 def main(argv):
-    dbName = "postgres"
+    dbName = "forward135"
     userName = "postgres"
 
     tableNames = []
