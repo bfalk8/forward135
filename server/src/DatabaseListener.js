@@ -3,8 +3,8 @@
 var pg  = require('pg');
 var ivm = require('./IVM');
 
-class DatabaseListener {
-    constructor(dbString) {
+const DatabaseListener = {
+    init: (dbString) => {
         pg.connect(dbString, function (err, client) {
             if (err)
             {
@@ -30,6 +30,6 @@ class DatabaseListener {
             var query = client.query("LISTEN watchers");
         });
     }
-}
+};
 
 module.exports = DatabaseListener;

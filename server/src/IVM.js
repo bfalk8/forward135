@@ -9,10 +9,15 @@ let Tables        = require('./Tables');
 const IVM = {
     socketHandler: new SocketHandler(),
     queries: {},
-    tables: new Tables(),
+    tables: {},
+
+    init: () => {
+        this.tables = new Tables();
+    },
 
     addQuery: (tName, query) => {
         this.tables.table(tName).query = query;
+        console.log('added query');
     },
 
     /**
@@ -21,7 +26,8 @@ const IVM = {
      * @param change
      */
     tableUpdate: change => {
-        console.log(change);
+        var queries = this.tables.table(change.table);
+        console.log(queries);
     }
 };
 
