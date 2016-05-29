@@ -22,6 +22,7 @@ const DatabaseListener = {
                     updateInfo.table  = payload[0];
                     updateInfo.column = payload[1];
                     updateInfo.id     = payload[2];
+                    console.log(updateInfo);
                     ivm.tableUpdate(updateInfo);
                 }
             });

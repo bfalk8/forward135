@@ -5,5 +5,5 @@ h1.textContent = new Greeting();
 
 let socket = WebSocket.socket;
 
-socket.emit('init query', {table: 'foo', query: 'select * from foo'});
+socket.emit('init query', {table: 'orders', query: 'select * from orders'});
 
