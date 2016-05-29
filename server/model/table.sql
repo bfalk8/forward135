@@ -52,6 +52,11 @@ DROP TRIGGER watch_fact_table_insert ON orders;
 CREATE TRIGGER watch_fact_table_insert AFTER INSERT ON orders
 FOR EACH ROW EXECUTE PROCEDURE notify_fact_table();
 
+INSERT INTO categories ( name, description) VALUES ('tech', 'techy McTechface');
+INSERT INTO products (name, sku, category_id, price, is_delete) VALUES ('surface', 'fucksku',1,10, false);
+
+INSERT INTO orders (user_id, product_id, quantity, price, is_cart) VALUES (5, 2, 2, 3.5, false);
+
 
 ---- users
 ------ functions
