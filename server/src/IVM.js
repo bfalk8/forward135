@@ -26,10 +26,11 @@ const IVM = {
      * @param change
      */
     tableUpdate: change => {
-        var queries = this.tables[change.table];
+        var queries = this.tables.table(change.table).queries;
         if (!queries) {
             return;
         }
+        console.log(queries);
         
         this.socketHandler.sendQueryDiff(queries);
     }

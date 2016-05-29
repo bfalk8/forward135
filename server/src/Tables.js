@@ -19,7 +19,7 @@ class Tables {
             }
         });
 
-        return this;
+        return this.tables[tName];
     }
     
     table(tName) {
