@@ -2,9 +2,8 @@
 
 var pg = require('pg');
 
-let conStr = 'postgres://postgres:test@localhost:5432/forward135';
-
-var internalServerError = {status: 500, response: 'An error occurred'};
+let internalServerError = {status: 500, response: 'An error occurred'};
+let conStr = 'postgresql://localhost:5432/postgres';
 
 const DAO = {
     makeParameterizedQuery: (qry, argArray) => {
