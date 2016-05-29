@@ -13,7 +13,7 @@ class SocketHandler {
             this.io.on('connection', this.handleSocket);
             handler = this;
         }
-        
+
         return handler;
     }
 
@@ -43,9 +43,9 @@ class SocketHandler {
     }
 
     sendQueryDiff(diff) {
-        // console.log('here we are in socket', diff);
-        var query = diff.query;
-        handler.io.to(query).emit(diff);
+        console.log('here we are in socket', diff);
+        // var query = diff.query;
+        // handler.io.to(query).emit(diff);
     }
 
 }
