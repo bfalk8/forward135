@@ -42,10 +42,10 @@ class SocketHandler {
         socket.emit('echo', data);
     }
 
-    sendQueryDiff(diff) {
+    sendQueryDiff(query, diff) {
         console.log('here we are in socket', diff);
         // var query = diff.query;
-        // handler.io.to(query).emit(diff);
+        handler.io.to(query).emit(diff);
     }
 
 }

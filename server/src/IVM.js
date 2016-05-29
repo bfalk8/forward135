@@ -31,8 +31,9 @@ const IVM = {
             return;
         }
         console.log(queries);
-        
-        this.socketHandler.sendQueryDiff(queries);
+        queries.forEach((element, index, array) => {
+            this.socketHandler.sendQueryDiff(element, change);
+        });
     }
 };
 
