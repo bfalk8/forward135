@@ -15,8 +15,9 @@ class RandomUpdater {
         let deferred = Q.defer();
         let count    = 0;
         var interval = setInterval(() => {
-            
-            dao.makePreparedStatement('randomInsert', insert, [Math.floor(Math.random()), Math.random().toFixed(2)]);
+            var insertValue = [Math.floor(Math.random() * 100), parseFloat((Math.random() * 100).toFixed(2))];
+            console.log('Insert values', insertValue);
+            dao.makePreparedStatement('randomInsert', insert, insertValue);
             if (this.maxInterval >= 0 && ++count > this.maxInterval)
             {
                 clearInterval(interval);

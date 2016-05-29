@@ -53,10 +53,10 @@ CREATE TRIGGER watch_fact_table_insert AFTER INSERT ON orders
 FOR EACH ROW EXECUTE PROCEDURE notify_fact_table();
 
 -- FIXME Change the filepath
--- COPY users(name, role, age, state) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/users.txt' DELIMITER ',' CSV;
--- COPY categories(name, description) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/categories.txt' DELIMITER ',' CSV;
--- COPY products(name, sku, category_id, price, is_delete) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/products.txt' DELIMITER ',' CSV;
--- COPY orders(user_id, product_id, quantity, price, is_cart) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/orders.txt' DELIMITER ',' CSV;
+COPY users(name, role, age, state) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/users.txt' DELIMITER ',' CSV;
+COPY categories(name, description) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/categories.txt' DELIMITER ',' CSV;
+COPY products(name, sku, category_id, price, is_delete) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/products.txt' DELIMITER ',' CSV;
+COPY orders(user_id, product_id, quantity, price, is_cart) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/orders.txt' DELIMITER ',' CSV;
 
 
 ---- users
