@@ -6,6 +6,7 @@ var app = express();
 var http = require('http').Server(app);
 var path = require('path');
 var Main = require('./server/src/Main');
+var config = require('./config.json');
 // var io = require('socket.io')(http);
 // var socket = require('./server/src/SocketHandler');
 // var DatabaseListener = require('./server/src/DatabaseListener');
@@ -40,5 +41,5 @@ app.use(function(err, req, res, next) {
     });
 });
 
-const pgConString = 'postgres://postgres:test@localhost:5432/forward135';
+const pgConString = config.connectionString;
 new Main(http, pgConString).run();
