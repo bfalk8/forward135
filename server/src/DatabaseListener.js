@@ -19,17 +19,14 @@ const DatabaseListener = {
                 console.log(msg);
                 if (msg.channel === 'watchers')
                 {
-                    var payload       = msg.payload.split(',');
-                    var updateInfo    = {};
-                    updateInfo.table  = payload[0];
-                    updateInfo.column = payload[1];
-                    updateInfo.id     = payload[2];
-                    ivm.tableUpdate(updateInfo);
+                    var payload = JSON.parse(msg.payload);
+                    console.log(payload);
+                    ivm.tableUpdate(payload);
                 }
             });
 
             // needs to be here to start listening to 'watchers' channel
-            var query = client.query("LISTEN watchers");
+            client.query("LISTEN watchers");
         });
     }
 };
