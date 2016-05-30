@@ -6,6 +6,8 @@ Repo for the forward research group's WebSocket Framework
 
 ## Structure
 
+### Database - Snowflake
+![Snowflake Schema](https://github.com/bfalk8/forward135/blob/master/docs/images/snowflakeDB.png "Snowflake Schema")
 
 ## API
 ### SocketIO messages (used internally within SocketModule)
