@@ -43,7 +43,7 @@ CREATE OR REPLACE FUNCTION
     RETURNS TRIGGER AS $$
 DECLARE
 BEGIN
-    PERFORM pg_notify('watchers', TG_TABLE_NAME || ',id,' || NEW.id);
+    PERFORM pg_notify('watchers', json_build_object('type', TG_OP, 'table', TG_TABLE_NAME, 'id', NEW.id)::text);
     RETURN new;
 END;
 $$ LANGUAGE plpgsql;
@@ -52,6 +52,11 @@ DROP TRIGGER IF EXISTS watch_fact_table_insert ON orders;
 CREATE TRIGGER watch_fact_table_insert AFTER INSERT ON orders
 FOR EACH ROW EXECUTE PROCEDURE notify_fact_table();
 
+-- FIXME Change the filepath
+-- COPY users(name, role, age, state) FROM 'C:\Users\Brandon\dev\projects\school\forward135\server\model\users.txt' DELIMITER ',' CSV;
+-- COPY categories(name, description) FROM 'C:\Users\Brandon\dev\projects\school\forward135\server\model\categories.txt' DELIMITER ',' CSV;
+-- COPY products(name, sku, category_id, price, is_delete) FROM 'C:\Users\Brandon\dev\projects\school\forward135\server\model\products.txt' DELIMITER ',' CSV;
+-- COPY orders(user_id, product_id, quantity, price, is_cart) FROM 'C:\Users\Brandon\dev\projects\school\forward135\server\model\orders.txt' DELIMITER ',' CSV;
 
 INSERT INTO categories ( name, description) VALUES ('tech', 'techy McTechface');
 INSERT INTO products (name, sku, category_id, price, is_delete) VALUES ('surface', 'fucksku',1,10, false);

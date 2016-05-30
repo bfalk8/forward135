@@ -22,12 +22,18 @@ const IVM = {
 
     /**
      * change is the result of the watcher function, has the following format
-     * change: {table: '<table that changed>', column: '<column the id is associated with>', id: '<id of new tuple>'}
+     * change: {table: '<table that changed>', type: '<INSERT, UPDTATE, or DELETE>', id: '<id of new tuple>'}
      * @param change
      */
     tableUpdate: change => {
-        var queries = this.tables.table(change.table);
+        var queries = this.tables.table(change.table).queries;
+        if (queries.length < 1) {
+            return;
+        }
         console.log(queries);
+        queries.forEach((element, index, array) => {
+            this.socketHandler.sendQueryDiff(element, change);
+        });
     }
 };
 
