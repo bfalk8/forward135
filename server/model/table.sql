@@ -63,8 +63,6 @@ INSERT INTO orders (user_id, product_id, quantity, price, is_cart) VALUES (5, 2,
 -- COPY products(name, sku, category_id, price, is_delete) FROM '/Users/alxrsngrtn/Github/forward135/server/model/products.txt' DELIMITER ',' CSV;
 -- COPY orders(user_id, product_id, quantity, price, is_cart) FROM '/Users/alxrsngrtn/Github/forward135/server/model/orders.txt' DELIMITER ',' CSV;
 
-
-
 ---- users
 ------ functions
 -- CREATE OR REPLACE FUNCTION
