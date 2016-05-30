@@ -7,12 +7,12 @@ let Tables        = require('./Tables');
 
 
 const IVM = {
-    socketHandler: new SocketHandler(),
     queries: {},
     tables: {},
 
     init: () => {
         this.tables = new Tables();
+        this.socketHandler = new SocketHandler();
     },
 
     addQuery: (tName, query) => {
