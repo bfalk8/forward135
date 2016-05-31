@@ -45,7 +45,7 @@ Our data is modeled with a Snowflake schema design: We have a central fact table
 
 For the purposes of our project, we only aim to implement summation aggregation as a proof of concept for more complex analytics. 
 
-![Snowflake Schema](https://github.com/bfalk8/forward135/blob/master/docs/images/snowflakeDB.png "Snowflake Schema")
+![Snowflake Schema](https://github.com/bfalk8/forward135/blob/master/docs/images/snowflakeDB1.png "Snowflake Schema")
 
 ## API
 ### SocketIO messages (used internally within SocketModule)
