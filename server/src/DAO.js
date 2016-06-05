@@ -1,11 +1,10 @@
 'use strict';
 
 var pg = require('pg');
+var config = require('../../config.json');
 
-let conStr = 'postgres://postgres:test@localhost:5432/forward135';
-
-var internalServerError = {status: 500, response: 'An error occurred'};
-
+let internalServerError = {status: 500, response: 'An error occurred'};
+let conStr = config.connectionString;
 const DAO = {
     makeParameterizedQuery: (qry, argArray) => {
         pg.connect(conStr, (err, client, done)=>{
@@ -84,9 +83,6 @@ const DAO = {
              */
             query.on('end', (result)=>{
                 done();
-                // TODO: see above todo
-                // res.writeHead(200, {'content-type': 'text/plain'});
-                // res.end('You are visitor number ' + result.rows[0]);
                 return {status:200, response:'success!', data: result};
             });
 
@@ -181,6 +177,8 @@ const DAO = {
                 done();
                 return {status:200, response: 'success!', data: result};
             });
+
+            done();
         });
 
     }
