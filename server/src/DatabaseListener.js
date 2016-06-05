@@ -3,8 +3,10 @@
 var pg  = require('pg');
 var ivm = require('./IVM');
 
+
 const DatabaseListener = {
     init: (dbString) => {
+        ivm.init();
         pg.connect(dbString, function (err, client) {
             if (err)
             {
