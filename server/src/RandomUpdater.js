@@ -17,6 +17,7 @@ class RandomUpdater {
         var interval = setInterval(() => {
             var insertValue = [Math.floor(Math.random() * 100), parseFloat((Math.random() * 100).toFixed(2))];
             dao.makeParameterizedQuery(insert, insertValue);
+            console.log(`Updater ${insertValue}`);
             if (this.maxInterval >= 0 && ++count > this.maxInterval)
             {
                 clearInterval(interval);
