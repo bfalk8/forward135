@@ -52,7 +52,7 @@ CREATE OR REPLACE FUNCTION
     RETURNS TRIGGER AS $$
 DECLARE
 BEGIN
-    PERFORM pg_notify('watchers', json_build_object('type', TG_OP, 'table', TG_TABLE_NAME, 'id', NEW.id)::text);
+    PERFORM pg_notify('watchers', TG_TABLE_NAME || ',id,' || NEW.id);
     RETURN new;
 END;
 $$ LANGUAGE plpgsql;
