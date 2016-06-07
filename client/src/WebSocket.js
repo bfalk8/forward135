@@ -5,7 +5,11 @@ class WebSocket {
         localStorage.debug = '*';
         this.init();
     }
-
+    
+    get io(){
+        return socket;    
+    }
+    
     init() {
         let host = window.location.origin;
         console.log("WEBSOCKET connecting to", host);
