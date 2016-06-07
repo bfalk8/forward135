@@ -4,6 +4,7 @@ var SocketHandler = require('./SocketHandler');
 var DatabaseQuery = require('./DatabaseQuery');
 var DAO = require('./DAO');
 let Tables        = require('./Tables');
+var _ = require('lodash');
 
 
 const IVM = {
@@ -79,6 +80,7 @@ const IVM = {
                 newVersion.forEach((element, index) => {
                     diff.payload.push({target: index, change: element});
                 });
+                this.queries[index].snapshot = newVersion;
                 callback(diff);
             });
         });
