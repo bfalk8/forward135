@@ -1,6 +1,6 @@
 class Log {
     constructor(listId){
-        this.listId = listId;
+        this.tableId = listId;
     }
     
     appendLog(payload){
@@ -9,7 +9,7 @@ class Log {
         var content = document.createTextNode(JSON.stringify(payload));
         pre.appendChild(content);
         node.appendChild(pre);                            
-        document.getElementById(this.listId).appendChild(node); 
+        document.getElementById(this.tableId).appendChild(node); 
     }
 }
 
