@@ -48,8 +48,7 @@ class SocketHandler {
             console.log('Room: ' + query + ' exists!');
         }
 
-        socket.join(query);
-        // socket.emit('init query', {data: 'initial query result'});
+        socket.join(roomHash);
     }
 
     echo(socket, data) {
@@ -57,9 +56,8 @@ class SocketHandler {
     }
 
     sendQueryDiff(query, diff) {
-        // console.log('here we are in socket', diff);
-        // FIXME map
-        handler.io.to(query).emit('diff query', diff);
+        let roomHash = queryMap[query];
+        handler.io.to(roomHash).emit('diff query', diff);
     }
 
 }
