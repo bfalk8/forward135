@@ -31,7 +31,7 @@ const IVM = {
      * @param change
      */
     tableUpdate: change => {
-        if(++this.numUpdates >= 6){
+        // if(++this.numUpdates >= 6){
             var queries = this.tables.table(change.table).queries;
             if (queries.length < 1) {
                 return;
@@ -39,9 +39,9 @@ const IVM = {
             queries.forEach( element => {
                 DAO.refreshMaterializedView(element.view);
                 // DAO.makeParameterizedQuery(element.query);
-                this.socketHandler.sendQueryDiff(element, change);
+                this.socketHandler.sendQueryDiff(element.query, change);
             });
-        }
+        // }
     }
 };
 
