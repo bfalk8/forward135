@@ -1,4 +1,5 @@
 import io from 'socket.io-client';
+
 class WebSocket {
 
     constructor() {
@@ -23,7 +24,11 @@ class WebSocket {
 
         this.socket.on('init query', (data)=>{console.log(data)});
 
-        this.socket.on('diff query', (data)=>{console.log(data)});
+        this.socket.on('diff query', (data)=>{ console.log(data)});
+    }
+
+    get io(){
+        return this.socket;
     }
 }
 
