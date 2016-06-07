@@ -22,10 +22,10 @@ The *Query* will be evaluated and the result will be emitted to the client using
 Diffs are objects that represent changes (differences) in the database. They follow the following format: 
 ```
 diff = {
-        op: <FUNCTION>,
-        target: <id>,
-        payload:  {<KEY>: <VALUE>}
-       }
+    op: <FUNCTION>,
+    query: <Query>,
+    payload: [ {target: <id>, change: {<KEY>: <VALUE>}}, ...]
+}
 ```
 The following functions (`op`) will eventually be supported:
 - `insert(target: <id>, payload: {<KEY>: <VALUE> })`
@@ -54,8 +54,18 @@ For the purposes of our project, we only aim to implement summation aggregation 
 
 #### Server --> Client
 * "init query" - `{result: <QUERY RESULT>}`
-* "diff query" - `{op: <FUNCTION>, target: <id>, payload: {<KEY>: <VALUE>}}` <br>
-  Example: `{op: 'INSERT', query: 'SELECT * FROM geisel', target:'3001', payload: {name: 'Cat', sex: 'Male', headware: 'Hat'} }`
+* "diff query" - `{op: <FUNCTION>, query: <Query>, payload: [{target: <id>, change: {<KEY>: <VALUE>}}, ...]}` <br>
+  Example: <br>
+```
+{
+    op: 'INSERT',
+    query: 'SELECT * FROM geisel', 
+    payload: [
+                { target: '3001', change: {name: 'Cat', sex: 'Male', headware: 'Hat'} }, 
+                { target: '3030', change: {name: 'Sam', meal: 'eggs and ham', color: 'green'} }
+            ] 
+}
+```
 
 [](### WrappedComponent Module)
 [](The WrappedComponent module is the module that the end user interacts with. The developer will pass this component a 'query' (relational algebra expression end_paran along with an object that provides a query results -> component elements mapping. The WrappedComponent module is responsible for creating an appropriate SocketModule, interpreting the diffs, and updating the views.)
