@@ -19,10 +19,17 @@ const IVM = {
         this.viewNum = 0;
     },
 
-    addQuery: (tName, query) => {
+    addQuery: (tName, query, callback) => {
         this.tables.table(tName).query = {query: query, view: `mv${++this.viewNum}`};
-        DAO.makeMaterializedView(query,`mv${this.viewNum}` );
+        DAO.makeMaterializedView(query,`mv${this.viewNum}`, (result)=>{
+            console.log(result);
+            DAO.makeQuery(query, (result) => {
+                result.query = query;
+                callback(result);
+            });
+        });
         console.log('added query');
+        
     },
 
     /**
@@ -39,7 +46,7 @@ const IVM = {
             queries.forEach( element => {
                 DAO.refreshMaterializedView(element.view);
                 // DAO.makeParameterizedQuery(element.query);
-                this.socketHandler.sendQueryDiff(element, change);
+                this.socketHandler.sendQueryDiff(element.query, change);
             });
         }
     }
