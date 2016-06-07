@@ -47,7 +47,7 @@ const DAO = {
         });
     },
 
-    makeMaterializedView: (queryName, matName) => {
+    makeMaterializedView: (queryName, matName, callback) => {
         pg.connect(conStr, (err, client, done) => {
             var handleError = (err)=>{
                 if(!err) {
@@ -60,7 +60,7 @@ const DAO = {
 
             if(handleError(err)){ return internalServerError; }
             
-            var materialized = `CREATE MATERIALIZED VIEW ${matName} AS ${queryName}`;
+            var materialized = `DROP MATERIALIZED VIEW IF EXISTS ${matName}; CREATE MATERIALIZED VIEW ${matName} AS ${queryName}`;
 
             var query = client.query(materialized);
 
@@ -83,7 +83,8 @@ const DAO = {
              */
             query.on('end', (result)=>{
                 done();
-                return {status:200, response:'success!', data: result};
+                callback(result);
+                // return {status:200, response:'success!', data: result};
             });
 
         })
@@ -132,6 +133,50 @@ const DAO = {
         })
     },
 
+    makeQuery: (queryName, callback) => {
+        pg.connect(conStr, (err, client, done) => {
+            var handleError = (err)=>{
+                if(!err) {
+                    return false; }
+
+                if(client){ done(client); }
+
+                return true;
+            };
+
+            if(handleError(err)){ return internalServerError; }
+
+            var query = client.query(queryName);
+
+            query.on('error', (err)=>{
+                console.error(err);
+                handleError(err);
+                return internalServerError;
+            });
+
+            query.on('row', (row, result)=>{
+                result.addRow(row);
+            });
+
+            /*
+             result:
+             - command   sql command
+             - rowCount  # rows affected
+             - oid       object id
+             - rows      array of rows
+             */
+            query.on('end', (result)=>{
+                done();
+                var queryResult = {
+                    payload: result.rows
+                };
+                callback(queryResult);
+                // return {status:200, response:'success!', data: result};
+            });
+
+        })
+    },
+    
     makePreparedStatement: (queryName, queryText, queryValue) => {
         // prepare config with optional fields
         var config = {text: queryText};

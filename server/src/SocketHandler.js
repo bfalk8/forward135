@@ -30,13 +30,15 @@ class SocketHandler {
         var query = data.query;
         if(!this.io.sockets.adapter.rooms[query]){
             console.log('Room: ' + query + ' created!');
-            handler.ivm.addQuery(table, query);
+            handler.ivm.addQuery(table, query, (results)=>{
+                socket.emit('init query', {data: results});
+            });
         } else {
             console.log('Room: ' + query + ' exists!');
         }
 
         socket.join(query);
-        socket.emit('init query', {data: 'initial query result'});
+        // socket.emit('init query', {data: 'initial query result'});
     }
 
     echo(socket, data) {
