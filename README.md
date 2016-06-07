@@ -54,8 +54,8 @@ For the purposes of our project, we only aim to implement summation aggregation 
 
 #### Server --> Client
 * "init query" - `{result: <QUERY RESULT>}`
-* "diff query" - `{op: <FUNCTION>, target: <id>, payload: {<KEY>: <VALUE>}}`
-  Example: `{op: 'INSERT', target:'3001', payload: {name: 'Cat', sex: 'Male', headware: 'Hat'} }`
+* "diff query" - `{op: <FUNCTION>, target: <id>, payload: {<KEY>: <VALUE>}}` <br>
+  Example: `{op: 'INSERT', query: 'SELECT * FROM geisel', target:'3001', payload: {name: 'Cat', sex: 'Male', headware: 'Hat'} }`
 
 [](### WrappedComponent Module)
 [](The WrappedComponent module is the module that the end user interacts with. The developer will pass this component a 'query' (relational algebra expression end_paran along with an object that provides a query results -> component elements mapping. The WrappedComponent module is responsible for creating an appropriate SocketModule, interpreting the diffs, and updating the views.)
