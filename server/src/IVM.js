@@ -44,17 +44,6 @@ const IVM = {
      * @param change
      */
     tableUpdate: change => {
-        // if(++this.numUpdates >= 6){
-        //     var queries = this.tables.table(change.table).queries;
-        //     if (queries.length < 1) {
-        //         return;
-        //     }
-        //     queries.forEach( element => {
-        //         DAO.refreshMaterializedView(element.view);
-        //         // DAO.makeParameterizedQuery(element.query);
-        //         this.socketHandler.sendQueryDiff(element.query, change);
-        //     });
-        // }
         console.log(this.numUpdates);
         if(++this.numUpdates == 3){
             IVM.performMaintenance();
@@ -75,11 +64,14 @@ const IVM = {
             DAO.makeQuery(queryString, (result) => {
                 var newVersion = result.payload;
                 var diff = {op: 'INSERT', query: queryObject.query, payload: []};
-                // RUN DIFF CODE HERE
-                // For now sending entire query back as diffs
+
                 newVersion.forEach((element, index) => {
-                    diff.payload.push({target: index, change: element});
+                    if(!_.isEqual(_.omit(element, _.functions(element)),
+                            _.omit(queryObject.snapshot[index], _.functions(queryObject.snapshot[index])))){
+                        diff.payload.push({target: index, change: element});
+                    }
                 });
+
                 this.queries[index].snapshot = newVersion;
                 callback(diff);
             });
