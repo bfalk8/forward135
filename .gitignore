@@ -35,6 +35,3 @@ node_modules
 # IntelliJ Stuff
 .idea/
 *.iml
-
-# Config gile
-config.json

@@ -7,9 +7,9 @@ let internalServerError = {status: 500, response: 'An error occurred'};
 let conStr = config.connectionString;
 const DAO = {
     makeParameterizedQuery: (qry, argArray) => {
-        pg.connect(conStr, (err, client, done)=>{
+        pg.connect(conStr, function(err, client, done){
 
-            var handleError = (err)=>{
+            var handleError = function(err){
                 if(!err) { return false; }
 
                 if(client){ done(client); }
@@ -21,12 +21,12 @@ const DAO = {
 
             var query = client.query(qry, argArray);
 
-            query.on('error', ()=>{
+            query.on('error', function(){
                 handleError(true);
                 return internalServerError;
             });
 
-            query.on('row', (row, result)=>{
+            query.on('row', function(row, result){
                 result.addRow(row);
             });
 
@@ -37,146 +37,13 @@ const DAO = {
                 - oid       object id
                 - rows      array of rows
              */
-            query.on('end', (result)=>{
+            query.on('end', function(result){
                 done();
-                // TODO: see above todo
-                // res.writeHead(200, {'content-type': 'text/plain'});
-                // res.end('You are visitor number ' + result.rows[0]);
-                return result;
+                return {status:200, response:'success!', data: result};
             });
         });
     },
 
-    makeMaterializedView: (queryName, matName, callback) => {
-        pg.connect(conStr, (err, client, done) => {
-            var handleError = (err)=>{
-                if(!err) {
-                    return false; }
-
-                if(client){ done(client); }
-
-                return true;
-            };
-
-            if(handleError(err)){ return internalServerError; }
-            
-            var materialized = `DROP MATERIALIZED VIEW IF EXISTS ${matName}; CREATE MATERIALIZED VIEW ${matName} AS ${queryName}`;
-
-            var query = client.query(materialized);
-
-            query.on('error', (err)=>{
-                console.error(err);
-                handleError(err);
-                return internalServerError;
-            });
-
-            query.on('row', (row, result)=>{
-                result.addRow(row);
-            });
-
-            /*
-             result:
-             - command   sql command
-             - rowCount  # rows affected
-             - oid       object id
-             - rows      array of rows
-             */
-            query.on('end', (result)=>{
-                done();
-                callback(result);
-                // return {status:200, response:'success!', data: result};
-            });
-
-        })
-    },
-
-    refreshMaterializedView: viewName => {
-        pg.connect(conStr, (err, client, done) => {
-            var handleError = (err)=>{
-                if(!err) { return false; }
-
-                if(client){ done(client); }
-
-                return true;
-            };
-
-            if(handleError(err)){ return internalServerError; }
-
-            var materialized = `REFRESH MATERIALZED VIEW ${viewName}}`;
-
-            var query = client.query(materialized);
-
-            query.on('error', ()=>{
-                handleError(true);
-                return internalServerError;
-            });
-
-            query.on('row', (row, result)=>{
-                result.addRow(row);
-            });
-
-            /*
-             result:
-             - command   sql command
-             - rowCount  # rows affected
-             - oid       object id
-             - rows      array of rows
-             */
-            query.on('end', (result)=>{
-                done();
-                // TODO: see above todo
-                // res.writeHead(200, {'content-type': 'text/plain'});
-                // res.end('You are visitor number ' + result.rows[0]);
-                return {status:200, response:'success!', data: result};
-            });
-
-        })
-    },
-
-    makeQuery: (queryName, callback) => {
-        pg.connect(conStr, (err, client, done) => {
-            var handleError = (err)=>{
-                if(!err) {
-                    return false; }
-
-                if(client){ done(client); }
-
-                return true;
-            };
-
-            if(handleError(err)){ return internalServerError; }
-
-            var query = client.query(queryName);
-
-            query.on('error', (err)=>{
-                console.error(err);
-                handleError(err);
-                return internalServerError;
-            });
-
-            query.on('row', (row, result)=>{
-                result.addRow(row);
-            });
-
-            /*
-             result:
-             - command   sql command
-             - rowCount  # rows affected
-             - oid       object id
-             - rows      array of rows
-             */
-            query.on('end', (result)=>{
-                done();
-                var queryResult = {
-                    payload: result.rows
-                };
-                callback(queryResult);
-                // return {status:200, response:'success!', data: result};
-            });
-
-        })
-    },
-    
     makePreparedStatement: (queryName, queryText, queryValue) => {
         // prepare config with optional fields
         var config = {text: queryText};
@@ -184,9 +51,9 @@ const DAO = {
         if(queryValue){ config.values = queryValue; }
 
         // console.info('[makePreparedStatement] config', config);
-        pg.connect(conStr, (err, client, done)=>{
+        pg.connect(conStr, function(err, client, done){
 
-            var handleError = (err)=>{
+            var handleError = function(err){
                 if(!err) { return false; }
 
                 if(client){ done(client); }
@@ -200,13 +67,12 @@ const DAO = {
             }
 
             var query = client.query(config);
-
-            query.on('error', ()=>{
+            query.on('error', function(){
                 handleError(true);
                 return internalServerError;
             });
 
-            query.on('row', (row, result)=>{
+            query.on('row', function(row, result){
                 result.addRow(row);
             });
 
@@ -217,7 +83,7 @@ const DAO = {
              - oid       object id
              - rows      array of rows
              */
-            query.on('end', (result)=>{
+            query.on('end', function(result){
                 // console.log('[makePreparedStatement] end', result);
                 done();
                 return {status:200, response: 'success!', data: result};

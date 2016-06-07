@@ -1,55 +1,66 @@
 'use strict';
 
-var _ = require('_');
+var _ = require('lodash');
 
-const TimedExecuter = {
-    
+let timedExec = {
     fns: [],
-    count: 0,
-    period: 10000,
-    setPeriod: period => {
-        this.period = period;
-        return this;
-    },
-    addFunctions: fn => {
-        if (typeof fn !== 'object')
-        {
-            throw TypeError('TimeExecuter.addFunction requires either a function or a array of functions.');
-        }
-
-        if (fn instanceof Array)
-        {
-            this.fns.concat(fn);
-            return this;
-        }
-
-        this.fns.push(fn);
-        return this;
-    },
-    run() {
-
-        let fns       = this.fns;
-        this.interval = setInterval(() => {
-            _.invoke(fns);
-        }, this.period);
-
-        return this;
-    },
-    stop: () => {
-        if (!this.interval)
-        {
-            return this;
-        }
-
-        clearInterval(this.interval);
-        return this;
-    },
-    force: () => {
-        let fns = this.fns;
-        this.stop();
-        _.invoke(fns);
-        return this.run();
-    }
+    period: 10000
 };
 
-module.exports = TimedExecuter;
+function invoke(fns) {
+    try
+    {
+        fns.forEach((fn)=> fn());
+    }
+    catch (err)
+    {
+        console.error(err)
+    }
+}
+
+timedExec.setPeriod = period => {
+    timedExec.period = period;
+    return timedExec;
+};
+
+timedExec.addFunctions = fn => {
+    let fnType = typeof fn;
+    if (fnType !== 'function' && typeof fn !== 'object')
+    {
+        throw TypeError('TimeExecuter.addFunction requires either a function or a array of functions.');
+    }
+
+    if (fn instanceof Array)
+    {
+        timedExec.fns = timedExec.fns.concat(fn);
+        return timedExec;
+    }
+
+    timedExec.fns.push(fn);
+    return timedExec;
+};
+
+timedExec.start = () => {
+    let fns            = timedExec.fns;
+    timedExec.interval = setInterval(() => invoke(fns), timedExec.period);
+    return timedExec;
+};
+
+timedExec.stop = () => {
+    if (!timedExec.interval)
+    {
+        return timedExec;
+    }
+
+    clearInterval(timedExec.interval);
+    return timedExec;
+};
+
+timedExec.force = () => {
+    let fns = timedExec.fns;
+    timedExec.stop();
+    invoke(fns);
+    return timedExec.run();
+};
+
+module.exports = timedExec;
