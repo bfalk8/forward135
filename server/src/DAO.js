@@ -90,7 +90,7 @@ const DAO = {
         })
     },
 
-    refreshMaterializedView: viewName => {
+    refreshMaterializedView: (viewName, callback) => {
         pg.connect(conStr, (err, client, done) => {
             var handleError = (err)=>{
                 if(!err) { return false; }
@@ -127,6 +127,7 @@ const DAO = {
                 // TODO: see above todo
                 // res.writeHead(200, {'content-type': 'text/plain'});
                 // res.end('You are visitor number ' + result.rows[0]);
+                callback(result);
                 return {status:200, response:'success!', data: result};
             });
 
