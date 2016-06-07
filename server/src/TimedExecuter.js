@@ -2,6 +2,8 @@
 
 let timedExec = {
     fns: [],
+    count: 0,
+    countThreshold: 10,
     period: 10000
 };
 
@@ -19,6 +21,14 @@ function invoke(fns) {
 timedExec.setPeriod = period => {
     timedExec.period = period;
     return timedExec;
+};
+
+timedExec.incCount = () => {
+    timedExec.count = ++timedExec.count % timedExec.countThreshold;
+    if (timedExec.count === 0) {
+        console.log('[IVM] Insert count meets threshold.');
+        timedExec.force();
+    }
 };
 
 timedExec.addFunctions = fn => {
@@ -58,7 +68,7 @@ timedExec.force = () => {
     let fns = timedExec.fns;
     timedExec.stop();
     invoke(fns);
-    return timedExec.run();
+    return timedExec.start();
 };
 
 module.exports = timedExec;
