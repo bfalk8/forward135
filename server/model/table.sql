@@ -4,47 +4,48 @@ DROP TABLE IF EXISTS products CASCADE;
 DROP TABLE IF EXISTS orders CASCADE;
 
 CREATE TABLE users (
-    id    SERIAL PRIMARY KEY,
-    name  TEXT NOT NULL UNIQUE,
-    role  char(1) NOT NULL,
-    age   INTEGER NOT NULL,
-    state char(2) NOT NULL
+  id    SERIAL PRIMARY KEY,
+  name  TEXT    NOT NULL UNIQUE,
+  role  CHAR(1) NOT NULL,
+  age   INTEGER NOT NULL,
+  state CHAR(2) NOT NULL
 );
 
 CREATE TABLE categories (
-    id  SERIAL PRIMARY KEY,
-    name  TEXT NOT NULL UNIQUE,
-    description  TEXT NOT NULL
+  id          SERIAL PRIMARY KEY,
+  name        TEXT NOT NULL UNIQUE,
+  description TEXT NOT NULL
 );
 
 CREATE TABLE products (
-    id SERIAL PRIMARY KEY,
-    name TEXT NOT NULL,
-    sku CHAR(10) NOT NULL UNIQUE,
-    category_id INTEGER REFERENCES categories (id) NOT NULL,
-    price FLOAT NOT NULL CHECK (price >= 0),
-    is_delete BOOLEAN NOT NULL
+  id          SERIAL PRIMARY KEY,
+  name        TEXT                               NOT NULL,
+  sku         CHAR(10)                           NOT NULL UNIQUE,
+  category_id INTEGER REFERENCES categories (id) NOT NULL,
+  price       FLOAT                              NOT NULL CHECK (price >= 0),
+  is_delete   BOOLEAN                            NOT NULL
 );
 
 CREATE TABLE orders (
-    id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users (id) NOT NULL,
-    product_id INTEGER REFERENCES products (id) NOT NULL,
-    quantity INTEGER NOT NULL,
-    price FLOAT NOT NULL CHECK (price >= 0),
-    is_cart BOOLEAN NOT NULL
+  id         SERIAL PRIMARY KEY,
+  user_id    INTEGER REFERENCES users (id)    NOT NULL,
+  product_id INTEGER REFERENCES products (id) NOT NULL,
+  quantity   INTEGER                          NOT NULL,
+  price      FLOAT                            NOT NULL CHECK (price >= 0),
+  is_cart    BOOLEAN                          NOT NULL
 );
+
 
 -- Fact Table Trigger
 -- insert, update, delete
 
 CREATE OR REPLACE FUNCTION
-    notify_fact_table()
-    RETURNS TRIGGER AS $$
+  notify_fact_table()
+  RETURNS TRIGGER AS $$
 DECLARE
 BEGIN
-    PERFORM pg_notify('watchers', json_build_object('type', TG_OP, 'table', TG_TABLE_NAME, 'id', NEW.id)::text);
-    RETURN new;
+  PERFORM pg_notify('watchers', json_build_object('type', TG_OP, 'table', TG_TABLE_NAME, 'id', NEW.id) :: TEXT);
+  RETURN new;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -58,9 +59,14 @@ FOR EACH ROW EXECUTE PROCEDURE notify_fact_table();
 -- COPY products(name, sku, category_id, price, is_delete) FROM 'C:\Users\Brandon\dev\projects\school\forward135\server\model\products.txt' DELIMITER ',' CSV;
 -- COPY orders(user_id, product_id, quantity, price, is_cart) FROM 'C:\Users\Brandon\dev\projects\school\forward135\server\model\orders.txt' DELIMITER ',' CSV;
 
-INSERT INTO categories ( name, description) VALUES ('tech', 'techy McTechface');
-INSERT INTO products (name, sku, category_id, price, is_delete) VALUES ('surface', 'fucksku',1,10, false);
-INSERT INTO orders (user_id, product_id, quantity, price, is_cart) VALUES (5, 2, 2, 3.5, false);
+COPY users (name, role, age, state) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/users.txt' DELIMITER ',' CSV;
+COPY categories (name, description) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/categories.txt' DELIMITER ',' CSV;
+COPY products (name, sku, category_id, price, is_delete) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/products.txt' DELIMITER ',' CSV;
+COPY orders (user_id, product_id, quantity, price, is_cart) FROM '/home/kvass/workspaces/ucsd/forward135/server/model/orders.txt' DELIMITER ',' CSV;
+
+INSERT INTO categories (name, description) VALUES ('tech', 'techy McTechface');
+INSERT INTO products (name, sku, category_id, price, is_delete) VALUES ('surface', 'fucksku', 1, 10, FALSE);
+INSERT INTO orders (user_id, product_id, quantity, price, is_cart) VALUES (5, 2, 2, 3.5, FALSE);
 
 -- FIXME Change the filepath
 -- COPY users(name, role, age, state) FROM '/Users/alxrsngrtn/Github/forward135/server/model/users.txt' DELIMITER ',' CSV;
