@@ -3,7 +3,7 @@ import io from 'socket.io-client';
 class WebSocket {
 
     constructor() {
-        localStorage.debug = '*';
+        localStorage.debug = '';
         this.init();
     }
 
