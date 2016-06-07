@@ -6,7 +6,7 @@ class Log {
     appendLog(payload){
         var node = document.createElement("LI");                
         var pre = document.createElement("PRE");
-        var content = document.createTextNode(payload);
+        var content = document.createTextNode(JSON.stringify(payload));
         pre.appendChild(content);
         node.appendChild(pre);                            
         document.getElementById(this.listId).appendChild(node); 

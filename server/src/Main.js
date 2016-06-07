@@ -9,7 +9,7 @@ class Main {
         new SocketHandler(http);
         require('./DatabaseListener').init(dbconstring);
         require('./IVM').init();
-        this.updater = new RandomUpdater(10, 5000);
+        this.updater = new RandomUpdater(-1, 5000);
     }
 
     run() {
