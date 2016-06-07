@@ -10,7 +10,7 @@ class SocketHandler {
         if(!handler) {
             this.io = socket(http);
             this.ivm = require('./IVM');
-            this.ivm.init;
+            this.ivm.init();
             this.io.on('connection', this.handleSocket);
             handler = this;
         }
