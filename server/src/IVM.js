@@ -69,13 +69,13 @@ const IVM = {
     },
 
     createDiff: (queryObject, index, callback) => {
-        // DAO.makeQuery(queryObject.query, (result) => {
         DAO.refreshMaterializedView(queryObject.view, (result) => {
             var queryString = `SELECT * FROM ${queryObject.view}`;
             DAO.makeQuery(queryString, (result) => {
                 var newVersion = result.payload;
                 var diff = {op: 'INSERT', query: queryObject.query, payload: []};
                 // RUN DIFF CODE HERE
+                // For now sending entire query back as diffs
                 newVersion.forEach((element, index) => {
                     diff.payload.push({target: index, change: element});
                 });
