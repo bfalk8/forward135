@@ -92,22 +92,23 @@ const DAO = {
 
     refreshMaterializedView: (viewName, callback) => {
         pg.connect(conStr, (err, client, done) => {
-            var handleError = (err)=>{
-                if(!err) { return false; }
+            // var handleError = (err)=>{
+            //     if(!err) { return false; }
+            //
+            //     if(client){ done(client); }
+            //
+            //     return true;
+            // };
 
-                if(client){ done(client); }
+            // if(handleError(err)){ return internalServerError; }
 
-                return true;
-            };
-
-            if(handleError(err)){ return internalServerError; }
-
-            var materialized = `REFRESH MATERIALZED VIEW ${viewName}}`;
+            var materialized = `REFRESH MATERIALIZED VIEW ${viewName}`;
 
             var query = client.query(materialized);
 
-            query.on('error', ()=>{
-                handleError(true);
+            query.on('error', (err)=>{
+                // handleError(true);
+                console.error(err);
                 return internalServerError;
             });
 

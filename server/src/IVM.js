@@ -71,13 +71,16 @@ const IVM = {
     createDiff: (queryObject, index, callback) => {
         // DAO.makeQuery(queryObject.query, (result) => {
         DAO.refreshMaterializedView(queryObject.view, (result) => {
-            var newVersion = result.payload;
-            var diff = {op: 'INSERT', query: queryObject.query, payload: []};
-            // RUN DIFF CODE HERE
-            newVersion.forEach((element, index) => {
-                diff.payload.push({target: index, change: element});
+            var queryString = `SELECT * FROM ${queryObject.view}`;
+            DAO.makeQuery(queryString, (result) => {
+                var newVersion = result.payload;
+                var diff = {op: 'INSERT', query: queryObject.query, payload: []};
+                // RUN DIFF CODE HERE
+                newVersion.forEach((element, index) => {
+                    diff.payload.push({target: index, change: element});
+                });
+                callback(diff);
             });
-            callback(diff);
         });
     }
 };
