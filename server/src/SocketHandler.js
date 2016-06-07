@@ -44,8 +44,7 @@ class SocketHandler {
     }
 
     sendQueryDiff(query, diff) {
-        console.log('here we are in socket', diff);
-        // var query = diff.query;
+        // console.log('here we are in socket', diff);
         handler.io.to(query).emit(diff);
     }
 
