@@ -1,15 +1,12 @@
 import io from 'socket.io-client';
+
 class WebSocket {
 
     constructor() {
         localStorage.debug = '*';
         this.init();
     }
-    
-    get io(){
-        return socket;    
-    }
-    
+
     init() {
         let host = window.location.origin;
         console.log("WEBSOCKET connecting to", host);
@@ -27,7 +24,11 @@ class WebSocket {
 
         this.socket.on('init query', (data)=>{console.log(data)});
 
-        this.socket.on('diff query', (data)=>{console.log(data)});
+        this.socket.on('diff query', (data)=>{ console.log(data)});
+    }
+
+    get io(){
+        return this.socket;
     }
 }
 

@@ -10,7 +10,8 @@ let socket = WebSocket.socket;
 socket.emit('init query', {table: 'orders', query: 'select * from orders'});
 
 var insertLog = new Log('insertLog');
-socket.io.on('diff query', (data) => {
+socket.on('diff query', (data) => {
+    console.log('test');
     insertLog.appendLog(data);
 });
 
