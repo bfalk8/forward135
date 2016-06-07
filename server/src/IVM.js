@@ -1,11 +1,11 @@
 'use strict';
 
-var SocketHandler = require('./SocketHandler');
-var DatabaseQuery = require('./DatabaseQuery');
-var DAO = require('./DAO');
+let SocketHandler = require('./SocketHandler');
+let DatabaseQuery = require('./DatabaseQuery');
+let DAO           = require('./DAO');
 let Tables        = require('./Tables');
-var _ = require('lodash');
-
+let TimedExecuter = require('./TimedExecuter');
+let _             = require('lodash');
 
 const IVM = {
     queries: [],
@@ -15,23 +15,25 @@ const IVM = {
     tolerance: 15,
 
     init: () => {
-        this.tables = new Tables();
+        console.log('IVM init');
+        this.tables        = new Tables();
         this.socketHandler = new SocketHandler();
-        this.viewNum = 0;
-        this.queries = [];
-        this.numUpdates = 0;
+        this.viewNum       = 0;
+        this.queries       = [];
+        this.numUpdates    = 0;
+        TimedExecuter.addFunctions(IVM.performMaintenance).start();
     },
 
     addQuery: (tName, query, callback) => {
-        var materializedView = this.viewNum++;
+        var materializedView           = this.viewNum++;
         // this.tables.table(tName).query = {query: query, view: `mv${materializedView}`};
         this.queries[materializedView] = {query: query, view: `mv${materializedView}`};
-        DAO.makeMaterializedView(query,`mv${materializedView}`, (result)=>{
+        DAO.makeMaterializedView(query, `mv${materializedView}`, (result)=> {
             console.log(result);
             var queryString = `select * from mv${materializedView}`;
             DAO.makeQuery(queryString, (result) => {
                 this.queries[materializedView].snapshot = result.payload;
-                result.query = query;
+                result.query                            = query;
                 callback(result);
                 console.log('added query');
             });
@@ -55,13 +57,11 @@ const IVM = {
         //         this.socketHandler.sendQueryDiff(element.query, change);
         //     });
         // }
-        console.log(this.numUpdates);
-        if(++this.numUpdates == 3){
-            IVM.performMaintenance();
-        }
+        TimedExecuter.incCount();
     },
 
     performMaintenance: () => {
+        console.log('[IVM] Performing maintenance');
         this.queries.forEach((element, index) => {
             IVM.createDiff(element, index, (diff) => {
                 this.socketHandler.sendQueryDiff(element.query, diff);
@@ -74,7 +74,7 @@ const IVM = {
             var queryString = `SELECT * FROM ${queryObject.view}`;
             DAO.makeQuery(queryString, (result) => {
                 var newVersion = result.payload;
-                var diff = {op: 'INSERT', query: queryObject.query, payload: []};
+                var diff       = {op: 'INSERT', query: queryObject.query, payload: []};
                 // RUN DIFF CODE HERE
                 // For now sending entire query back as diffs
                 newVersion.forEach((element, index) => {
