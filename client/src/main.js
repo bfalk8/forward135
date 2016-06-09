@@ -28,7 +28,7 @@ var top_k_user =
 'LEFT JOIN ORDERS O ' +
 'ON O.USER_ID = USR.ID AND O.PRODUCT_ID = PROD.ID ' +
 'GROUP BY USR.ID, PROD.ID, USR.NAME, PROD.NAME, USR.USER_SUM, PROD.PRODUCT_SUM ' +
-'ORDER BY PROD.PRODUCT_SUM DESC;'
+'ORDER BY PROD.PRODUCT_SUM DESC, USR.USER_SUM DESC;';
 
 var simple_query = 'select * from orders ';
 
@@ -39,7 +39,7 @@ var analyticsTable = new AnalyticsTable('analytics');
 
 socket.on('init query', request => {
     console.log('Populating table');
-    analyticsTable.populate(request.data.payload, 'User \\ Product'); // TODO: remove .data.
+    analyticsTable.populate(request.payload, 'User \\ Product'); // TODO: remove .data.
 });
 
 socket.on('error message', data => {
