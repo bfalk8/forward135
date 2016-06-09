@@ -29,22 +29,22 @@ var top_k_user =
 'ON O.USER_ID = USR.ID AND O.PRODUCT_ID = PROD.ID ' +
 'GROUP BY USR.ID, PROD.ID, USR.NAME, PROD.NAME, USR.USER_SUM, PROD.PRODUCT_SUM ' +
 'ORDER BY PROD.PRODUCT_SUM DESC;'
-var lookup_table = 'select * from top_k_lookup;';
 
 var simple_query = 'select * from orders ';
+
 
 socket.emit('init query', {table: 'orders', query: top_k_user});
 
 var analyticsTable = new AnalyticsTable('analytics');
 
-// socket.on('init query', data => {
-//     console.log('Populating table');
-//     analyticsTable.populate(data.data.payload, 'User \\ Product');
-// });
+socket.on('init query', request => {
+    console.log('Populating table');
+    analyticsTable.populate(request.data.payload, 'User \\ Product'); // TODO: remove .data.
+});
 
 var insertLog = new Log('insertLog');
-socket.on('diff query', (data) => {
-    console.log('test');
-    insertLog.appendLog(data);
+socket.on('diff query', request => {
+    analyticsTable.updateTable(request.payload);
+    insertLog.appendLog(request);
 });
 

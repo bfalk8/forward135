@@ -1,72 +1,15 @@
-let sample_data = {
-    payload: [
-        { 
-            cell_sum: 60754.79,
-            col_sum: 81562.59,
-            product_name: 'JrJHhr0u5L',
-            row_sum: 66438.1600000001,
-            user_name: 'ktyswaZMNv'
-        },
-        {
-            cell_sum: 1846.1,
-            col_sum: 33054.07,
-            product_name: 'MHcHy9iA3o',
-            row_sum: 66438.1600000001, 
-            user_name: 'ktyswaZMNv'
-        },
-        {
-            cell_sum: 0,
-            col_sum: 33054.07,
-            product_name: 'ISaFlQBHt6',
-            row_sum: 66438.1600000001,
-            user_name: 'ktyswaZMNv'
-        },
-        {
-            cell_sum: 0,
-            col_sum: 33054.07,
-            product_name: 'oxZw7egyKd',
-            row_sum: 66438.1600000001,
-            user_name: 'ktyswaZMNv'
-        },
-        {
-            cell_sum: 60754.79,
-            col_sum: 81562.59,
-            product_name: 'JrJHhr0u5L',
-            row_sum: 66438.1600000001,
-            user_name: 'ToIeqwCCwu'
-        },
-        {
-            cell_sum: 1846.1,
-            col_sum: 33054.07,
-            product_name: 'MHcHy9iA3o',
-            row_sum: 66438.1600000001,
-            user_name: 'ToIeqwCCwu'
-        },
-        {
-            cell_sum: 0,
-            col_sum: 33054.07,
-            product_name: 'ISaFlQBHt6',
-            row_sum: 66438.1600000001,
-            user_name: 'ToIeqwCCwu'
-        },
-        {
-            cell_sum: 0,
-            col_sum: 33054.07,
-            product_name: 'oxZw7egyKd',
-            row_sum: 66438.1600000001,
-            user_name: 'ToIeqwCCwu'
-        }
-    ]
-};
 
 class AnalyticsTable {
-    constructor(tableId){
+    constructor(tableId, newCellColor)
+    {
         this.tableId = tableId;
+        this.newCellColor = newCellColor || '#ffff99';
         // this.populate(sample_data.payload, 'test');
     }
 
-    populate(data, labelString){
-        let trs = {};
+    populate(data, labelString)
+    {
+        let rows = {};
         let colNames = {};
         let totalUser = {};
         let totalProd = {};
@@ -76,48 +19,54 @@ class AnalyticsTable {
 
         let table = document.getElementById(this.tableId);
 
-        colNames['label'] = this.createTd(labelStr);
-        
-        data.forEach(elem => {
+        colNames['label'] = this.createTd(labelStr, null, 'header');
+        let targetId = 0;
+        data.forEach(elem =>
+        {
 
-            if(!(elem.col_sum in totalProd)){
-                totalProd[elem.col_sum] = this.createTd(elem.col_sum.toString());
+            if (!(elem.column_sum in totalProd)) {
+                totalProd[elem.column_sum] = this.createTd(elem.column_sum, targetId.toString() + 'Col', 'cell');
             }
 
-            if(!(elem.row_sum in totalUser)){
-                totalUser[elem.row_sum] = this.createTd(elem.row_sum.toString());
+            if (!(elem.row_sum in totalUser)) {
+                totalUser[elem.row_sum] = this.createTd(elem.row_sum, targetId.toString() + 'Row', 'cell');
             }
 
-            if(!(elem.product_name in colNames)){
-                colNames[elem.product_name] = this.createTd(elem.product_name.toString());
+            if (!(elem.product_name in colNames)) {
+                colNames[elem.product_name] = this.createTd(elem.product_name);
             }
 
-            if(!(elem.user_name in trs)){
+            if (!(elem.user_name in rows)) {
                 let tr = document.createElement('tr');
-                let td = this.createTd(elem.user_name.toString());
+                let td = this.createTd(elem.user_name);
                 tr.appendChild(td);
-                trs[elem.user_name] = tr;
+                // tr.setAttribute('id', elem.user_name.toString());
+                rows[elem.user_name] = tr;
             }
 
-            trs[elem.user_name].appendChild(this.createTd(elem.cell_sum.toString()));
+            rows[elem.user_name].appendChild(this.createTd(elem.cell_sum, targetId.toString(), 'cell'));
+
+            targetId++;
         });
 
         let trProdTotal = document.createElement('tr');
+        trProdTotal.setAttribute('id', 'productTotalRow');
 
-        for(let key in totalProd){
-            if(!totalProd.hasOwnProperty(key)){
+        for (let key in totalProd) {
+            if (!totalProd.hasOwnProperty(key)) {
                 continue;
             }
             trProdTotal.appendChild(totalProd[key]);
         }
 
-        trs['total'] = trProdTotal;
+        rows['total'] = trProdTotal;
         // colNames['total'] = this.createTd('Total');
 
         let header = document.createElement('tr');
+        header.setAttribute('id', 'header');
 
-        for(let key in colNames){
-            if(!colNames.hasOwnProperty(key)){
+        for (let key in colNames) {
+            if (!colNames.hasOwnProperty(key)) {
                 continue;
             }
             header.appendChild(colNames[key]);
@@ -125,21 +74,88 @@ class AnalyticsTable {
 
         table.appendChild(header);
 
-        for(let key in trs){
-            if(!trs.hasOwnProperty(key)){
+        for (let key in rows) {
+            if (!rows.hasOwnProperty(key)) {
                 continue;
             }
-            table.appendChild(trs[key]);
+            table.appendChild(rows[key]);
         }
     }
 
-    createTd(data){
-        let cell = document.createTextNode(data);
+    updateTable(payload)
+    {
+        this.clearAllCellColor();
+
+        let numNotUpdated = 0;
+        payload.forEach(diff =>
+        {
+            if (!this.updateElementOnTable(diff)) {
+                numNotUpdated++;
+            }
+        });
+        console.log((payload.length - numNotUpdated+1)+ '/' + payload.length + ' updated');
+    }
+
+
+    updateElementOnTable(diff)
+    {
+        let wasUpdated = false;
+        wasUpdated |= this.changeCellIfDifferent(diff.target.toString(), diff.change.cell_sum);
+        wasUpdated |= this.changeCellIfDifferent(diff.target.toString() + 'Row', diff.change.row_sum);
+        wasUpdated |= this.changeCellIfDifferent(diff.target.toString() + 'Col', diff.change.column_sum);
+
+        return wasUpdated;
+    }
+
+    clearAllCellColor()
+    {
+        let cellsList = document.getElementsByClassName('cell');
+        let cellsArray = Array.from(cellsList);
+        cellsArray.forEach(cell =>
+        {
+            if (cell.hasAttribute('bgcolor')) {
+                cell.removeAttribute('bgcolor');
+            }
+        });
+    }
+
+
+    changeCellIfDifferent(id, newValue)
+    {
+        let element = document.getElementById(id);
+
+        if (typeof element === 'undefined' || element === null) {
+            return false;
+        }
+
+        let newValStr = newValue.toString();
+        let currValueStr = element.innerText || element.textContent;
+        if (currValueStr != newValStr) {
+            element.innerHTML = newValStr;
+            element.setAttribute('bgcolor', this.newCellColor);
+            return true;
+        }
+        return false;
+    }
+
+    createTd(data, idVal, classVal)
+    {
+        let cell = document.createTextNode(data.toString());
         let td = document.createElement('td');
         td.appendChild(cell);
+
+        if (typeof idVal !== 'undefined' && idVal !== null) {
+            td.setAttribute('id', idVal.toString());
+        }
+
+        if (typeof classVal !== 'undefined' && classVal !== null) {
+            td.setAttribute('class', classVal.toString());
+        }
+
         return td;
     }
 
 }
+
 
 export default AnalyticsTable;

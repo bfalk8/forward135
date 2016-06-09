@@ -40,6 +40,11 @@ const IVM = {
         });
     },
 
+    // Returns current snapshot for query
+    getQuery: query => {
+
+    },
+
     /**
      * change is the result of the watcher function, has the following format
      * change: {table: '<table that changed>', type: '<INSERT, UPDTATE, or DELETE>', id: '<id of new tuple>'}
@@ -53,7 +58,9 @@ const IVM = {
         console.log('[IVM] Performing maintenance');
         this.queries.forEach((element, index) => {
             IVM.createDiff(element, index, (diff) => {
-                this.socketHandler.sendQueryDiff(element.query, diff);
+                if(diff.payload.length > 0){
+                    this.socketHandler.sendQueryDiff(element.query, diff);
+                }
             });
         });
     },
