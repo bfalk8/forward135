@@ -53,8 +53,6 @@ class SocketHandler {
             socket.emit('init query', {query: query, payload: queryObject.snapshot});
             socket.join(roomHash);
         }
-
-        // socket.join(roomHash);
     }
 
     echo(socket, data) {

@@ -3,20 +3,16 @@
 let SocketHandler = require('./SocketHandler');
 let DatabaseQuery = require('./DatabaseQuery');
 let DAO           = require('./DAO');
-let Tables        = require('./Tables');
 let TimedExecuter = require('./TimedExecuter');
 let _             = require('lodash');
 
 const IVM = {
     queries: [],
-    tables: {},
     viewNum: 0,
     numUpdates: 0,
-    tolerance: 15,
 
     init: () => {
         console.log('IVM init');
-        this.tables        = new Tables();
         this.socketHandler = new SocketHandler();
         this.viewNum       = 0;
         this.queries       = [];
@@ -61,11 +57,7 @@ const IVM = {
         }).snapshot;
     },
 
-    /**
-     * change is the result of the watcher function, has the following format
-     * change: {table: '<table that changed>', type: '<INSERT, UPDTATE, or DELETE>', id: '<id of new tuple>'}
-     * @param change
-     */
+    // Gets called from the DatabaseListener on each trigger
     tableUpdate: change => {
         TimedExecuter.incCount();
     },

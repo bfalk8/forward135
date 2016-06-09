@@ -18,8 +18,6 @@ const DatabaseListener = {
                 console.log(msg);
                 if (msg.channel === 'watchers')
                 {
-                    // var payload = JSON.parse(msg.payload);
-                    // console.log(payload);
                     ivm.tableUpdate(msg);
                 }
             });
