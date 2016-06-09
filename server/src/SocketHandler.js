@@ -36,17 +36,15 @@ class SocketHandler {
         var query    = data.query;
         let roomHash = sha1(query);
         queryMap[query] = roomHash;
-        if (!this.io.sockets.adapter.rooms[roomHash])
-        {
+        if (!this.io.sockets.adapter.rooms[roomHash]) {
             console.log('Room: ' + query + ' created!');
             handler.ivm.addQuery(table, query, (results)=> {
                 socket.emit('init query', {data: results});
             });
         }
-        else
-        {
+        else {
             console.log('Room: ' + query + ' exists!');
-            
+            socket.emit('init query', handler.ivm.getQuery(query));
         }
 
         socket.join(roomHash);
