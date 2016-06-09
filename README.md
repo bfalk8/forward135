@@ -1,5 +1,5 @@
 # Forward135
-A Full-Stack Architectre for efficient change propogation from the server all the way to the client. 
+A Full-Stack Architectre for efficient change propogation from the server all the way to the client.
 
 http://forward.ucsd.edu/
 
@@ -11,15 +11,15 @@ http://forward.ucsd.edu/
 
 Communication is initialed by a client-side WebSocket module. After a connection has been established, the client will emit a message of type `("init query", <QUERY>)`. It will also start listening for messages of type *Query*.
 
-When a message is retrieved by the server, the client's session will be added to the group *Query*. Groups are implemented using SocketIO's rooms: 
+When a message is retrieved by the server, the client's session will be added to the group *Query*. Groups are implemented using SocketIO's rooms:
 
-- If a *Query* room already exists, the new client will join the room. 
+- If a *Query* room already exists, the new client will join the room.
 - If a *Query* does not exist, a new room will be created.
 
 The *Query* will be evaluated and the result will be emitted to the client using a *Diff*.
 
 ### Diff
-Diffs are objects that represent changes (differences) in the database. They follow the following format: 
+Diffs are objects that represent changes (differences) in the database. They follow the following format:
 ```
 diff = {
     op: <FUNCTION>,
@@ -41,9 +41,9 @@ IVM is short for Incremental View Maintenance. It's a module that generates Diff
 Upon retrieval, the client will add the Diff to a log. The client keeps separate logs for each type of Diff (insert, update, and delete). In the future, a batching modal can be implemented to support lazy propagation.
 
 ### Snowflake Schema
-Our data is modeled with a Snowflake schema design: We have a central fact table (orders) and other tables that provide dimensions to the data in the fact table. This allows for efficient aggregation and analytics calculation. 
+Our data is modeled with a Snowflake schema design: We have a central fact table (orders) and other tables that provide dimensions to the data in the fact table. This allows for efficient aggregation and analytics calculation.
 
-For the purposes of our project, we only aim to implement summation aggregation as a proof of concept for more complex analytics. 
+For the purposes of our project, we only aim to implement summation aggregation as a proof of concept for more complex analytics.
 
 ![Snowflake Schema](https://github.com/bfalk8/forward135/blob/master/docs/images/snowflakeDB1.png "Snowflake Schema")
 
@@ -53,19 +53,20 @@ For the purposes of our project, we only aim to implement summation aggregation 
 * "init query" - `{query: <QUERY>}`
 
 #### Server --> Client
-* "init query" - `{result: <QUERY RESULT>}`
-* "diff query" - `{op: <FUNCTION>, query: <Query>, payload: [{target: <id>, change: {<KEY>: <VALUE>}}, ...]}` <br>
+* "init query" - `{query: <QUERY BEING TRACKED>, payload: <QUERY RESULT>}`
+* "diff query" - `{op: <FUNCTION>, query: <QUERY>, payload: [{target: <id>, change: {<KEY>: <VALUE>}}, ...]}` <br>
   Example: <br>
 ```
 {
     op: 'INSERT',
-    query: 'SELECT * FROM geisel', 
+    query: 'SELECT * FROM geisel',
     payload: [
-                { target: '3001', change: {name: 'Cat', sex: 'Male', headware: 'Hat'} }, 
+                { target: '3001', change: {name: 'Cat', sex: 'Male', headware: 'Hat'} },
                 { target: '3030', change: {name: 'Sam', meal: 'eggs and ham', color: 'green'} }
-            ] 
+            ]
 }
 ```
+* "error message" - `{query: <QUERY BEING TRACKED>, error: <ERROR MESSAGE>}`
 
 [](### WrappedComponent Module)
 [](The WrappedComponent module is the module that the end user interacts with. The developer will pass this component a 'query' (relational algebra expression end_paran along with an object that provides a query results -> component elements mapping. The WrappedComponent module is responsible for creating an appropriate SocketModule, interpreting the diffs, and updating the views.)
