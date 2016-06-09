@@ -25,15 +25,13 @@ const IVM = {
     },
 
     addQuery: (tName, query, callback) => {
-        var materializedView           = this.viewNum++;
-        // this.queries[materializedView] = {query: query, view: `mv${materializedView}`};
+        var materializedView = this.viewNum++;
         DAO.makeMaterializedView(query, `mv${materializedView}`, (result, err)=> {
             if(err){
                 console.error(err);
                 callback(null, err);
                 return;
             }
-            console.log(result);
             var queryString = `select * from mv${materializedView}`;
             DAO.makeQuery(queryString, (result, err) => {
                 if(err){
@@ -41,10 +39,9 @@ const IVM = {
                     callback(null, err);
                     return;
                 }
-                this.queries[materializedView].snapshot = result.payload;
-                result.query                            = query;
-                this.queries[materializedView] = {query: query, view: `mv${materializedView}`};
-                console.log('added query');
+                this.queries[materializedView] = {query: query, view: `mv${materializedView}`, snapshot: result.payload};
+                result.query = query;
+                console.log(`added query: ${query} with materialized view mv${materializedView}`);
                 callback(result);
             });
         });

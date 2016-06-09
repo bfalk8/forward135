@@ -33,7 +33,7 @@ var lookup_table = 'select * from top_k_lookup;';
 
 var simple_query = 'select * from orders where product_id = 3';
 
-socket.emit('init query', {table: 'orders', query: 'select * from ordersd'});
+socket.emit('init query', {table: 'orders', query: 'select * from orders'});
 
 var analyticsTable = new AnalyticsTable('analytics');
 
