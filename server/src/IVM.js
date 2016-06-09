@@ -26,12 +26,19 @@ const IVM = {
 
     addQuery: (tName, query, callback) => {
         var materializedView           = this.viewNum++;
-        // this.tables.table(tName).query = {query: query, view: `mv${materializedView}`};
         this.queries[materializedView] = {query: query, view: `mv${materializedView}`};
-        DAO.makeMaterializedView(query, `mv${materializedView}`, (result)=> {
+        DAO.makeMaterializedView(query, `mv${materializedView}`, (result, err)=> {
+            if(err){
+                console.error(err);
+                return;
+            }
             console.log(result);
             var queryString = `select * from mv${materializedView}`;
-            DAO.makeQuery(queryString, (result) => {
+            DAO.makeQuery(queryString, (result, err) => {
+                if(err){
+                    console.error(err);
+                    return;
+                }
                 this.queries[materializedView].snapshot = result.payload;
                 result.query                            = query;
                 callback(result);
@@ -75,9 +82,17 @@ const IVM = {
     },
 
     createDiff: (queryObject, index, callback) => {
-        DAO.refreshMaterializedView(queryObject.view, (result) => {
+        DAO.refreshMaterializedView(queryObject.view, (result, err) => {
+            if(err){
+                console.error(err);
+                return;
+            }
             var queryString = `SELECT * FROM ${queryObject.view}`;
-            DAO.makeQuery(queryString, (result) => {
+            DAO.makeQuery(queryString, (result, err) => {
+                if(err){
+                    console.error(err);
+                    return;
+                }
                 var newVersion = result.payload;
                 var diff = {op: 'INSERT', query: queryObject.query, payload: []};
 

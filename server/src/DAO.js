@@ -55,7 +55,8 @@ const DAO = {
 
             query.on('error', (err)=>{
                 console.error(err);
-                return internalServerError;
+                callback(null, err);
+                // return internalServerError;
             });
 
             query.on('row', (row, result)=>{
@@ -85,7 +86,8 @@ const DAO = {
 
             query.on('error', (err)=>{
                 console.error(err);
-                return internalServerError;
+                callback(null, err);
+                // return internalServerError;
             });
 
             query.on('row', (row, result)=>{
@@ -113,7 +115,8 @@ const DAO = {
 
             query.on('error', (err)=>{
                 console.error(err);
-                return internalServerError;
+                callback(null, err);
+                // return internalServerError;
             });
 
             query.on('row', (row, result)=>{
