@@ -33,7 +33,7 @@ var lookup_table = 'select * from top_k_lookup;';
 
 var simple_query = 'select * from orders where product_id = 3';
 
-socket.emit('init query', {table: 'orders', query: 'select * from orders'});
+socket.emit('init query', {table: 'orders', query: 'select * from ordersd'});
 
 var analyticsTable = new AnalyticsTable('analytics');
 
@@ -41,6 +41,10 @@ socket.on('init query', data => {
     console.log('Populating table');
     console.log(data);
     analyticsTable.populate(data.data.payload, 'User \\ Product');
+});
+
+socket.on('error message', data => {
+    console.error('OMG SOCKET ERROR: ', data)
 });
 
 var insertLog = new Log('insertLog');

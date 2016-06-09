@@ -40,19 +40,21 @@ class SocketHandler {
             console.log('Room: ' + query + ' created!');
             handler.ivm.addQuery(table, query, (results, err)=> {
                 if(err){
-                    socket.emit('error', {query: query, error: 'failed to create query'});
+                    socket.emit('error message', {query: query, error: 'failed to create query'});
                     return;
                 }
                 socket.emit('init query', results);
+                socket.join(roomHash);
             });
         }
         else {
             console.log('Room: ' + query + ' exists!');
             let queryObject = handler.ivm.getQuery(query);
             socket.emit('init query', {query: query, payload: queryObject.snapshot});
+            socket.join(roomHash);
         }
 
-        socket.join(roomHash);
+        // socket.join(roomHash);
     }
 
     echo(socket, data) {
