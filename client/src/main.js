@@ -33,12 +33,13 @@ var lookup_table = 'select * from top_k_lookup;';
 
 var simple_query = 'select * from orders where product_id = 3';
 
-socket.emit('init query', {table: 'orders', query: lookup_table});
+socket.emit('init query', {table: 'orders', query: 'select * from orders'});
 
 var analyticsTable = new AnalyticsTable('analytics');
 
 socket.on('init query', data => {
     console.log('Populating table');
+    console.log(data);
     analyticsTable.populate(data.data.payload, 'User \\ Product');
 });
 
