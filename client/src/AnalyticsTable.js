@@ -42,7 +42,7 @@ class AnalyticsTable {
 
             if (!(elem.user_name in rows)) {
                 let tr = document.createElement('tr');
-                let td = this.createTd(elem.user_name);
+                let td = this.createTd(elem.user_name, targetId.toString() + 'User');
                 tr.appendChild(td);
                 // tr.setAttribute('id', elem.user_name.toString());
                 rows[elem.user_name] = tr;
@@ -114,6 +114,7 @@ class AnalyticsTable {
         wasUpdated |= this.changeCellIfDifferent(diff.target.toString(), diff.change.cell_sum);
         wasUpdated |= this.changeCellIfDifferent(diff.target.toString() + 'Row', diff.change.row_sum);
         wasUpdated |= this.changeCellIfDifferent(diff.target.toString() + 'Col', diff.change.column_sum);
+        wasUpdated |= this.changeCellIfDifferent(diff.target.toString() + 'User', diff.change.user_name);
 
         return wasUpdated;
     }
