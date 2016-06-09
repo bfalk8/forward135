@@ -46,6 +46,7 @@ class SocketHandler {
         else
         {
             console.log('Room: ' + query + ' exists!');
+            
         }
 
         socket.join(roomHash);
