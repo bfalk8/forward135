@@ -35,3 +35,7 @@ node_modules
 # IntelliJ Stuff
 .idea/
 *.iml
+
+# Developer specific files
+config.json
+server/model/*.txt
