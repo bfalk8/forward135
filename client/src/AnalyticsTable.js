@@ -12,6 +12,7 @@ class AnalyticsTable {
         let rows = {};
         let colNames = {};
         let totalUser = {};
+        let totalUserArray = [];
         let totalProd = {};
         totalProd.total = this.createTd('Total');
 
@@ -19,7 +20,9 @@ class AnalyticsTable {
 
         let table = document.getElementById(this.tableId);
 
-        colNames['label'] = this.createTd(labelStr, null, 'header');
+        colNames.label = this.createTd(labelStr, null, 'header');
+        totalUser.label = this.createTd('Total', null, 'header');
+        totalUserArray.push(totalUser.label);
         let targetId = 0;
         data.forEach(elem =>
         {
@@ -30,6 +33,7 @@ class AnalyticsTable {
 
             if (!(elem.row_sum in totalUser)) {
                 totalUser[elem.row_sum] = this.createTd(elem.row_sum, targetId.toString() + 'Row', 'cell');
+                totalUserArray.push(totalUser[elem.row_sum]);
             }
 
             if (!(elem.product_name in colNames)) {
@@ -49,6 +53,9 @@ class AnalyticsTable {
             targetId++;
         });
 
+        totalUser.empty2 = this.createTd('');
+        totalUserArray.push(totalUser.empty2);
+
         let trProdTotal = document.createElement('tr');
         trProdTotal.setAttribute('id', 'productTotalRow');
 
@@ -59,7 +66,7 @@ class AnalyticsTable {
             trProdTotal.appendChild(totalProd[key]);
         }
 
-        rows['total'] = trProdTotal;
+        rows.total = trProdTotal;
         // colNames['total'] = this.createTd('Total');
 
         let header = document.createElement('tr');
@@ -71,14 +78,18 @@ class AnalyticsTable {
             }
             header.appendChild(colNames[key]);
         }
-
+        
+        header.appendChild(totalUser.label);
         table.appendChild(header);
 
+        let idx = 1;
         for (let key in rows) {
             if (!rows.hasOwnProperty(key)) {
                 continue;
             }
+            rows[key].appendChild(totalUserArray[idx]);
             table.appendChild(rows[key]);
+            idx++;
         }
     }
 
