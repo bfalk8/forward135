@@ -132,7 +132,12 @@ const DAO = {
                 var queryResult = {
                     payload: result.rows
                 };
-                callback(queryResult);
+                
+                try{
+                    callback(queryResult);
+                } catch(err) {
+                    return internalServerError;
+                }
             });
 
         })
