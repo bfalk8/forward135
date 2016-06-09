@@ -53,7 +53,9 @@ const IVM = {
         console.log('[IVM] Performing maintenance');
         this.queries.forEach((element, index) => {
             IVM.createDiff(element, index, (diff) => {
-                this.socketHandler.sendQueryDiff(element.query, diff);
+                if(diff.payload.length > 1){
+                    this.socketHandler.sendQueryDiff(element.query, diff);
+                }
             });
         });
     },
