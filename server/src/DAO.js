@@ -39,9 +39,6 @@ const DAO = {
              */
             query.on('end', (result)=>{
                 done();
-                // TODO: see above todo
-                // res.writeHead(200, {'content-type': 'text/plain'});
-                // res.end('You are visitor number ' + result.rows[0]);
                 return result;
             });
         });
@@ -56,24 +53,15 @@ const DAO = {
             query.on('error', (err)=>{
                 console.error(err);
                 callback(null, err);
-                // return internalServerError;
             });
 
             query.on('row', (row, result)=>{
                 result.addRow(row);
             });
 
-            /*
-             result:
-             - command   sql command
-             - rowCount  # rows affected
-             - oid       object id
-             - rows      array of rows
-             */
             query.on('end', (result)=>{
                 done();
                 callback(result);
-                // return {status:200, response:'success!', data: result};
             });
 
         })
@@ -87,20 +75,12 @@ const DAO = {
             query.on('error', (err)=>{
                 console.error(err);
                 callback(null, err);
-                // return internalServerError;
             });
 
             query.on('row', (row, result)=>{
                 result.addRow(row);
             });
 
-            /*
-             result:
-             - command   sql command
-             - rowCount  # rows affected
-             - oid       object id
-             - rows      array of rows
-             */
             query.on('end', (result)=>{
                 done();
                 callback(result);
@@ -116,7 +96,6 @@ const DAO = {
             query.on('error', (err)=>{
                 console.error(err);
                 callback(null, err);
-                // return internalServerError;
             });
 
             query.on('row', (row, result)=>{
