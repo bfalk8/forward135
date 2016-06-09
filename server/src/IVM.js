@@ -40,9 +40,18 @@ const IVM = {
         });
     },
 
-    // Returns current snapshot for query
+    // Returns query object for passed in query
     getQuery: query => {
+        return this.queries.find(entry => {
+            return entry.query === query;
+        });
+    },
 
+    // Returns current snapshot for query
+    getSnapshot: query => {
+        return this.queries.find(entry => {
+            return entry.query === query;
+        }).snapshot;
     },
 
     /**
