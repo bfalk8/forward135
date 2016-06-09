@@ -43,7 +43,7 @@ class SocketHandler {
                     socket.emit('error', {query: query, error: 'failed to create query'});
                     return;
                 }
-                socket.emit('init query', {results});
+                socket.emit('init query', results);
             });
         }
         else {
