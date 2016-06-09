@@ -36,5 +36,6 @@ node_modules
 .idea/
 *.iml
 
-# Config gile
+# Developer specific files
 config.json
+server/model/*.txt

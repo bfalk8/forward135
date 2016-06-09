@@ -49,24 +49,12 @@ const DAO = {
 
     makeMaterializedView: (queryName, matName, callback) => {
         pg.connect(conStr, (err, client, done) => {
-            var handleError = (err)=>{
-                if(!err) {
-                    return false; }
-
-                if(client){ done(client); }
-
-                return true;
-            };
-
-            if(handleError(err)){ return internalServerError; }
-            
             var materialized = `DROP MATERIALIZED VIEW IF EXISTS ${matName}; CREATE MATERIALIZED VIEW ${matName} AS ${queryName}`;
 
             var query = client.query(materialized);
 
             query.on('error', (err)=>{
                 console.error(err);
-                handleError(err);
                 return internalServerError;
             });
 
@@ -90,24 +78,13 @@ const DAO = {
         })
     },
 
-    refreshMaterializedView: viewName => {
+    refreshMaterializedView: (viewName, callback) => {
         pg.connect(conStr, (err, client, done) => {
-            var handleError = (err)=>{
-                if(!err) { return false; }
-
-                if(client){ done(client); }
-
-                return true;
-            };
-
-            if(handleError(err)){ return internalServerError; }
-
-            var materialized = `REFRESH MATERIALZED VIEW ${viewName}}`;
-
+            var materialized = `REFRESH MATERIALIZED VIEW ${viewName}`;
             var query = client.query(materialized);
 
-            query.on('error', ()=>{
-                handleError(true);
+            query.on('error', (err)=>{
+                console.error(err);
                 return internalServerError;
             });
 
@@ -124,10 +101,7 @@ const DAO = {
              */
             query.on('end', (result)=>{
                 done();
-                // TODO: see above todo
-                // res.writeHead(200, {'content-type': 'text/plain'});
-                // res.end('You are visitor number ' + result.rows[0]);
-                return {status:200, response:'success!', data: result};
+                callback(result);
             });
 
         })
@@ -135,22 +109,10 @@ const DAO = {
 
     makeQuery: (queryName, callback) => {
         pg.connect(conStr, (err, client, done) => {
-            var handleError = (err)=>{
-                if(!err) {
-                    return false; }
-
-                if(client){ done(client); }
-
-                return true;
-            };
-
-            if(handleError(err)){ return internalServerError; }
-
             var query = client.query(queryName);
 
             query.on('error', (err)=>{
                 console.error(err);
-                handleError(err);
                 return internalServerError;
             });
 
@@ -171,7 +133,6 @@ const DAO = {
                     payload: result.rows
                 };
                 callback(queryResult);
-                // return {status:200, response:'success!', data: result};
             });
 
         })

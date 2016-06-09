@@ -6,7 +6,6 @@ var ivm = require('./IVM');
 
 const DatabaseListener = {
     init: (dbString) => {
-        ivm.init();
         pg.connect(dbString, function (err, client) {
             if (err)
             {
@@ -19,9 +18,9 @@ const DatabaseListener = {
                 console.log(msg);
                 if (msg.channel === 'watchers')
                 {
-                    var payload = JSON.parse(msg.payload);
-                    console.log(payload);
-                    ivm.tableUpdate(payload);
+                    // var payload = JSON.parse(msg.payload);
+                    // console.log(payload);
+                    ivm.tableUpdate(msg);
                 }
             });
 
