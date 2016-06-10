@@ -32,14 +32,19 @@ var top_k_user =
 
 var simple_query = 'select * from orders ';
 
+var analyticsTable = new AnalyticsTable('analytics');
 
 socket.emit('init query', {table: 'orders', query: top_k_user});
-
-var analyticsTable = new AnalyticsTable('analytics');
+socket.emit('init query', {table: 'orders', query: simple_query});
 
 socket.on('init query', request => {
     console.log('Populating table');
-    analyticsTable.populate(request.payload, 'User \\ Product'); // TODO: remove .data.
+    if(request.query === top_k_user){
+        analyticsTable.populate(request.payload, 'User \\ Product'); // TODO: remove .data.
+    }
+    if(request.query === simple_query){
+        console.log(request);
+    }
 });
 
 socket.on('error message', data => {
@@ -48,7 +53,12 @@ socket.on('error message', data => {
 
 var insertLog = new Log('insertLog');
 socket.on('diff query', request => {
-    analyticsTable.updateTable(request.payload);
+    if(request.query === top_k_user){
+        analyticsTable.updateTable(request.payload);
+    }
+    if(request.query === simple_query){
+        console.log('DIFF INCOMING: ', request);
+    }
     insertLog.appendLog(request);
 });
 
