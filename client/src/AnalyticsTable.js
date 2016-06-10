@@ -11,29 +11,30 @@ class AnalyticsTable {
     {
         let rows = {};
         let colNames = {};
-        let totalUser = {};
-        let totalUserArray = [];
-        let totalProd = {};
-        totalProd.total = this.createTd('Total');
+        let totalRow = {};
+        let totalRowArray = [];
+        let totalCol = {};
 
         let labelStr = labelString || '';
 
         let table = document.getElementById(this.tableId);
 
+
+        totalCol.total = this.createTd('Total');
         colNames.label = this.createTd(labelStr, null, 'header');
-        totalUser.label = this.createTd('Total', null, 'header');
-        totalUserArray.push(totalUser.label);
+        totalRow.label = this.createTd('Total', null, 'header');
+        totalRowArray.push(totalRow.label);
         let targetId = 0;
         data.forEach(elem =>
         {
 
-            if (!(elem.column_sum in totalProd)) {
-                totalProd[elem.column_sum] = this.createTd(elem.column_sum, targetId.toString() + 'Col', 'cell');
+            if (!(elem.column_sum in totalCol)) {
+                totalCol[elem.column_sum] = this.createTd(elem.column_sum, targetId + 'Col', 'cell');
             }
 
-            if (!(elem.row_sum in totalUser)) {
-                totalUser[elem.row_sum] = this.createTd(elem.row_sum, targetId.toString() + 'Row', 'cell');
-                totalUserArray.push(totalUser[elem.row_sum]);
+            if (!(elem.row_sum in totalRow)) {
+                totalRow[elem.row_sum] = this.createTd(elem.row_sum, targetId + 'Row', 'cell');
+                totalRowArray.push(totalRow[elem.row_sum]);
             }
 
             if (!(elem.product_name in colNames)) {
@@ -42,35 +43,33 @@ class AnalyticsTable {
 
             if (!(elem.user_name in rows)) {
                 let tr = document.createElement('tr');
-                let td = this.createTd(elem.user_name, targetId.toString() + 'User', 'user');
+                let td = this.createTd(elem.user_name, targetId + 'User', 'user');
                 tr.appendChild(td);
-                // tr.setAttribute('id', elem.user_name.toString());
                 rows[elem.user_name] = tr;
             }
 
-            rows[elem.user_name].appendChild(this.createTd(elem.cell_sum, targetId.toString(), 'cell'));
+            rows[elem.user_name].appendChild(this.createTd(elem.cell_sum, targetId, 'cell'));
 
             targetId++;
         });
 
-        totalUser.empty2 = this.createTd('');
-        totalUserArray.push(totalUser.empty2);
+        totalRow.empty = this.createTd('');
+        totalRowArray.push(totalRow.empty);
 
         let trProdTotal = document.createElement('tr');
-        trProdTotal.setAttribute('id', 'productTotalRow');
+        trProdTotal.setAttribute('id', this.prefixId('productTotalRow'));
 
-        for (let key in totalProd) {
-            if (!totalProd.hasOwnProperty(key)) {
+        for (let key in totalCol) {
+            if (!totalCol.hasOwnProperty(key)) {
                 continue;
             }
-            trProdTotal.appendChild(totalProd[key]);
+            trProdTotal.appendChild(totalCol[key]);
         }
 
         rows.total = trProdTotal;
-        // colNames['total'] = this.createTd('Total');
 
         let header = document.createElement('tr');
-        header.setAttribute('id', 'header');
+        header.setAttribute('id', this.prefixId('header'));
 
         for (let key in colNames) {
             if (!colNames.hasOwnProperty(key)) {
@@ -79,7 +78,7 @@ class AnalyticsTable {
             header.appendChild(colNames[key]);
         }
         
-        header.appendChild(totalUser.label);
+        header.appendChild(totalRow.label);
         table.appendChild(header);
 
         let idx = 1;
@@ -87,7 +86,7 @@ class AnalyticsTable {
             if (!rows.hasOwnProperty(key)) {
                 continue;
             }
-            rows[key].appendChild(totalUserArray[idx]);
+            rows[key].appendChild(totalRowArray[idx]);
             table.appendChild(rows[key]);
             idx++;
         }
@@ -111,17 +110,17 @@ class AnalyticsTable {
     updateElementOnTable(diff)
     {
         let wasUpdated = false;
-        wasUpdated |= this.changeCellIfDifferent(diff.target.toString(), diff.change.cell_sum);
-        wasUpdated |= this.changeCellIfDifferent(diff.target.toString() + 'Row', diff.change.row_sum);
-        wasUpdated |= this.changeCellIfDifferent(diff.target.toString() + 'Col', diff.change.column_sum);
-        wasUpdated |= this.changeCellIfDifferent(diff.target.toString() + 'User', diff.change.user_name);
+        wasUpdated |= this.changeCellIfDifferent(this.prefixId(diff.target), diff.change.cell_sum);
+        wasUpdated |= this.changeCellIfDifferent(this.prefixId(diff.target + 'Row'), diff.change.row_sum);
+        wasUpdated |= this.changeCellIfDifferent(this.prefixId(diff.target + 'Col'), diff.change.column_sum);
+        wasUpdated |= this.changeCellIfDifferent(this.prefixId(diff.target + 'User'), diff.change.user_name);
 
         return wasUpdated;
     }
 
     clearAllCellColor()
     {
-        let cellsList = document.getElementsByClassName('cell');
+        let cellsList = document.getElementsByClassName(this.prefixId('cell'));
         let cellsArray = Array.from(cellsList);
         cellsArray.forEach(cell =>
         {
@@ -130,7 +129,7 @@ class AnalyticsTable {
             }
         });
 
-        let usersList = document.getElementsByClassName('user');
+        let usersList = document.getElementsByClassName(this.prefixId('user'));
         let usersArray = Array.from(usersList);
         usersArray.forEach(cell =>
         {
@@ -161,19 +160,26 @@ class AnalyticsTable {
 
     createTd(data, idVal, classVal)
     {
+        idVal = this.prefixId(idVal);
+        classVal = this.prefixId(classVal);
+        
         let cell = document.createTextNode(data.toString());
         let td = document.createElement('td');
         td.appendChild(cell);
 
         if (typeof idVal !== 'undefined' && idVal !== null) {
-            td.setAttribute('id', idVal.toString());
+            td.setAttribute('id', idVal);
         }
 
         if (typeof classVal !== 'undefined' && classVal !== null) {
-            td.setAttribute('class', classVal.toString());
+            td.setAttribute('class', classVal);
         }
 
         return td;
+    }
+
+    prefixId(id){
+        return this.tableId + id;
     }
 
 }
