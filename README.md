@@ -1,5 +1,5 @@
 # Forward135
-A Full-Stack Architectre for efficient change propogation from the server all the way to the client.
+A Full-Stack Architecture for efficient change propagation from the server all the way to the client.
 
 http://forward.ucsd.edu/
 
@@ -38,7 +38,7 @@ The following functions (`op`) will eventually be supported:
 For the purposes of our project, however, we only intend to handle insertions.
 
 ### Server --> Client: IVM
-IVM is short for Incremental View Maintenance. It's a module that generates Diffs based on changes in the database. At some point, the IVM will generate a Diff for a given *<QUERY>*. When this happens, the IVM will communicate with the SocketHandler module to propagage a Diff to the right room (deferred maintenance / propagation).
+IVM is short for Incremental View Maintenance. It's a module that generates Diffs based on changes in the database. At some point, the IVM will generate a Diff for a given *<QUERY>*. When this happens, the IVM will communicate with the SocketHandler module to propagate a Diff to the right room (deferred maintenance / propagation).
 
 Upon retrieval, the client will add the Diff to a log. The client keeps separate logs for each type of Diff (insert, update, and delete). In the future, a batching modal can be implemented to support lazy propagation.
 
