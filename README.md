@@ -65,8 +65,8 @@ For the purposes of our project, we only aim to implement summation aggregation 
     op: 'INSERT',
     query: 'SELECT * FROM geisel',
     payload: [
-                { target: '3001', change: {name: 'Cat', sex: 'Male', headware: 'Hat'} },
-                { target: '3030', change: {name: 'Sam', meal: 'eggs and ham', color: 'green'} }
+                { target: '3001', change: {name: 'Cat', meal: 'food', headware: 'Hat'} },
+                { target: '3030', change: {name: 'Sam', meal: 'eggs and ham', headware: 'Grad Cap'} }
             ]
 }
 ```
