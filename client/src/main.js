@@ -2,7 +2,7 @@ import Greeting from './Greeting.js';
 import WebSocket from './WebSocket.js';
 import Log from './Log';
 import AnalyticsTable from './AnalyticsTable';
-import RecentOrdersTable from './RecentOrdersTable';
+import Table from './Table';
 
 var h1 = document.querySelector('h1');
 h1.textContent = new Greeting();
@@ -62,7 +62,7 @@ var recentOrders = 'SELECT o.id, u.name AS user_name, p.name as product_name, o.
 
 var topkusersTable = new AnalyticsTable('topkusers');
 var topkproductsTable = new AnalyticsTable('topkproducts');
-var recentOrdersTable = new RecentOrdersTable('recentOrders');
+var recentOrdersTable = new Table('recentOrders');
 
 socket.emit('init query', {table: 'orders', query: topKUser});
 socket.emit('init query', {table: 'orders', query: topKProduct});
@@ -97,8 +97,7 @@ socket.on('diff query', request =>
     if (request.query === topKProduct) {
         topkproductsTable.updateTable(request.payload);
     }
-    if (request.query === simple_query) {
-        // console.log('DIFF INCOMING: ', request);
+    if (request.query === recentOrders) {
         recentOrdersTable.updateTable(request.payload);
     }
     insertLog.appendLog(request);
