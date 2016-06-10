@@ -9,17 +9,19 @@ http://forward.ucsd.edu/
 ## Structure
 ### Client --> Server: WebSockets
 
-Communication is initialed by a client-side WebSocket module. After a connection has been established, the client will emit a message of type `("init query", <QUERY>)`. It will also start listening for messages of type *Query*.
+Communication is initialed by a client-side WebSocket module. After a connection has been established, the client will emit a message of type `("init query", <QUERY>)`. It will also start listening for messages of type *init query*.
 
-When a message is retrieved by the server, the client's session will be added to the group *Query*. Groups are implemented using SocketIO's rooms:
+When a message is retrieved by the server, the client's session will be added to the group *<QUERY>*. Groups are implemented using SocketIO's rooms:
 
-- If a *Query* room already exists, the new client will join the room.
-- If a *Query* does not exist, a new room will be created.
+- If a *<QUERY>* room already exists, the new client will join the room.
+- If a *<QUERY>* does not exist, a new room will be created.
 
-The *Query* will be evaluated and the result will be emitted to the client using a *Diff*.
+The *<QUERY>* will be evaluated and the result will be emitted to the client using an *init query* message.
+
+The client will then start listening to for the *diff query* message.
 
 ### Diff
-Diffs are objects that represent changes (differences) in the database. They follow the following format:
+Diffs are objects that represent changes (differences) in the query results. They follow the following format:
 ```
 diff = {
     op: <FUNCTION>,
@@ -36,7 +38,7 @@ The following functions (`op`) will eventually be supported:
 For the purposes of our project, however, we only intend to handle insertions.
 
 ### Server --> Client: IVM
-IVM is short for Incremental View Maintenance. It's a module that generates Diffs based on changes in the database. At some point, the IVM will generate a Diff for a given *Query*. When this happens, the IVM will communicate with the SocketHandler module to propagage a Diff to the right room (eager propagation).
+IVM is short for Incremental View Maintenance. It's a module that generates Diffs based on changes in the database. At some point, the IVM will generate a Diff for a given *<QUERY>*. When this happens, the IVM will communicate with the SocketHandler module to propagage a Diff to the right room (deferred maintenance / propagation).
 
 Upon retrieval, the client will add the Diff to a log. The client keeps separate logs for each type of Diff (insert, update, and delete). In the future, a batching modal can be implemented to support lazy propagation.
 
@@ -67,11 +69,6 @@ For the purposes of our project, we only aim to implement summation aggregation 
 }
 ```
 * "error message" - `{query: <QUERY BEING TRACKED>, error: <ERROR MESSAGE>}`
-
-[](### WrappedComponent Module)
-[](The WrappedComponent module is the module that the end user interacts with. The developer will pass this component a 'query' (relational algebra expression end_paran along with an object that provides a query results -> component elements mapping. The WrappedComponent module is responsible for creating an appropriate SocketModule, interpreting the diffs, and updating the views.)
-
-[](When a WrappedComponent module is instantiated, it is passed a string containing the relational algebra in the syntax we support. Also, a reference to the selector `id` of the component being wrapped will be passed in so the module can find the component in the html tree. Finally, an object containing a mapping of query result to selector to let our module know where to insert the data returned from the database i.e. for a query of the form `select * from SOMETABLE where age > 21` and we knew beforehand that our query result would return columns 'name', 'age', and 'email', our mapping object would look like `{name: '#name', age: '#age', email: '#email'}` `... new WrappedComponent(<query>, <id>, <mapping object> end_paran` )
 
 ## References
 [1] http://blog.zarifis.info/ivm-fullstack-proposal/
