@@ -1,21 +1,18 @@
 
-class RecentOrdersTable {
+class Table {
     constructor(tableId, newCellColor)
     {
         this.tableId = tableId;
         this.newCellColor = newCellColor || '#ffff99';
-        // this.populate(sample_data.payload, 'test');
+        this.headerKeys = null;
     }
 
     populate(data)
     {
 
-
         let table = document.getElementById(this.tableId);
 
         let rows = {};
-
-        this.headerKeys = null;
 
         let targetId = 0;
         data.forEach(elem =>
@@ -36,9 +33,9 @@ class RecentOrdersTable {
                     this.headerKeys.push(key);
                 }
 
-                rows.header = header;
-            }
 
+                this.headerObj = header;
+            }
 
 
             let tr = document.createElement('tr');
@@ -52,13 +49,12 @@ class RecentOrdersTable {
                 }
                 tr.appendChild(this.createTd(elem[key], targetId + key, 'cell'));
             }
-
             rows[elem.id] = tr;
-
 
             targetId++;
         });
 
+        table.appendChild(this.headerObj);
 
         for (let key in rows) {
             if (!rows.hasOwnProperty(key)) {
@@ -71,7 +67,6 @@ class RecentOrdersTable {
     updateTable(payload)
     {
         this.clearAllCellColor();
-        console.log('recent orders');
         let numNotUpdated = 0;
         payload.forEach(diff =>
         {
@@ -87,17 +82,9 @@ class RecentOrdersTable {
     {
         let wasUpdated = false;
 
-        console.log(this.headerKeys);
-
         this.headerKeys.forEach(key => {
-            console.log(this.prefix(diff.target + key));
             wasUpdated |= this.changeCellIfDifferent(this.prefix(diff.target + key), diff.change[key]);
         });
-
-        // wasUpdated |= this.changeCellIfDifferent(this.prefix(diff.target), diff.change.cell_sum);
-        // wasUpdated |= this.changeCellIfDifferent(this.prefix(diff.target + 'Row'), diff.change.row_sum);
-        // wasUpdated |= this.changeCellIfDifferent(this.prefix(diff.target + 'Col'), diff.change.column_sum);
-        // wasUpdated |= this.changeCellIfDifferent(this.prefix(diff.target + 'User'), diff.change.user_name);
 
         return wasUpdated;
     }
@@ -113,14 +100,6 @@ class RecentOrdersTable {
             }
         });
 
-        // let usersList = document.getElementsByClassName(this.prefix('user'));
-        // let usersArray = Array.from(usersList);
-        // usersArray.forEach(cell =>
-        // {
-        //     if (cell.hasAttribute('bgcolor')) {
-        //         cell.removeAttribute('bgcolor');
-        //     }
-        // });
     }
 
 
@@ -169,4 +148,4 @@ class RecentOrdersTable {
 }
 
 
-export default RecentOrdersTable;
+export default Table;
