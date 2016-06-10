@@ -97,8 +97,7 @@ socket.on('diff query', request =>
     if (request.query === topKProduct) {
         topkproductsTable.updateTable(request.payload);
     }
-    if (request.query === simple_query) {
-        // console.log('DIFF INCOMING: ', request);
+    if (request.query === recentOrders) {
         recentOrdersTable.updateTable(request.payload);
     }
     insertLog.appendLog(request);

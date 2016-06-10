@@ -71,7 +71,7 @@ class RecentOrdersTable {
     updateTable(payload)
     {
         this.clearAllCellColor();
-
+        console.log('recent orders');
         let numNotUpdated = 0;
         payload.forEach(diff =>
         {
@@ -86,6 +86,8 @@ class RecentOrdersTable {
     updateElementOnTable(diff)
     {
         let wasUpdated = false;
+
+        console.log(this.headerKeys);
 
         this.headerKeys.forEach(key => {
             console.log(this.prefix(diff.target + key));
