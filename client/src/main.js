@@ -55,10 +55,10 @@ var top_k_product =
 var simple_query = 'select * from orders ';
 
 var topkusersTable = new AnalyticsTable('topkusers');
-// var topkproductsTable = new AnalyticsTable('topkproducts');
+var topkproductsTable = new AnalyticsTable('topkproducts');
 
 socket.emit('init query', {table: 'orders', query: top_k_user});
-// socket.emit('init query', {table: 'orders', query: top_k_product});
+socket.emit('init query', {table: 'orders', query: top_k_product});
 // socket.emit('init query', {table: 'orders', query: simple_query});
 
 socket.on('init query', request => {
@@ -67,7 +67,7 @@ socket.on('init query', request => {
         topkusersTable.populate(request.payload, 'User \\ Product');
     }
     if(request.query === top_k_product){
-        // topkproductsTable.populate(request.payload, 'Product \\ User');
+        topkproductsTable.populate(request.payload, 'Product \\ User');
     }
     if(request.query === simple_query){
         console.log(request);
@@ -84,7 +84,7 @@ socket.on('diff query', request => {
         topkusersTable.updateTable(request.payload);
     }
     if(request.query === top_k_product){
-        // topkproductsTable.updateTable(request.payload);
+        topkproductsTable.updateTable(request.payload);
     }
     if(request.query === simple_query){
         console.log('DIFF INCOMING: ', request);
