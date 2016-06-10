@@ -42,7 +42,7 @@ class AnalyticsTable {
 
             if (!(elem.user_name in rows)) {
                 let tr = document.createElement('tr');
-                let td = this.createTd(elem.user_name, targetId.toString() + 'User');
+                let td = this.createTd(elem.user_name, targetId.toString() + 'User', 'user');
                 tr.appendChild(td);
                 // tr.setAttribute('id', elem.user_name.toString());
                 rows[elem.user_name] = tr;
@@ -124,6 +124,15 @@ class AnalyticsTable {
         let cellsList = document.getElementsByClassName('cell');
         let cellsArray = Array.from(cellsList);
         cellsArray.forEach(cell =>
+        {
+            if (cell.hasAttribute('bgcolor')) {
+                cell.removeAttribute('bgcolor');
+            }
+        });
+
+        let usersList = document.getElementsByClassName('user');
+        let usersArray = Array.from(usersList);
+        usersArray.forEach(cell =>
         {
             if (cell.hasAttribute('bgcolor')) {
                 cell.removeAttribute('bgcolor');
