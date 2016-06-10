@@ -52,7 +52,9 @@ For the purposes of our project, we only aim to implement summation aggregation 
 ## API
 ### SocketIO messages (used internally within SocketModule)
 #### Client --> Server
-* "init query" - `{query: <QUERY>}`
+* "init query" - `{query: <QUERY>}` <br>
+  Example: <br>
+`{query: 'select * from sometable join anothertable on somevalue = anothervalue...'}`
 
 #### Server --> Client
 * "init query" - `{query: <QUERY BEING TRACKED>, payload: <QUERY RESULT>}`
